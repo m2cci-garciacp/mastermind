@@ -1,8 +1,12 @@
 
+typedef struct {
+    int nbCorrect; int nbMalPlaces; int Trouve;
+}ResultTentative;
+#define L 5
 
-void initialisation(int T[L]);
-int getRules();
-int T[L] tentative();
-int fin();
+void initialisation();
+char * getRules();
+ResultTentative tentative(int Seq[L]);
+char * fin();
 
 

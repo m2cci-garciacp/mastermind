@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "mastermind.h"
 #define L 5
+
+
 
 
 int EstPresent(int x, int seq_cible[L]);
@@ -8,7 +11,7 @@ int trouve;
 // typedef {}ls_color
 int seq_cible[L];
 
-void initialisation(int T[L])
+void initialisation()
 {
     int nv_diff;
     printf("Choix de la difficulté \n");
@@ -17,22 +20,24 @@ void initialisation(int T[L])
     // Choix de la séquence de couleur 
     for (i = 0; i < 4; i++)
     {
-        T[i] = rand() % (nv_diff+1);
+        seq_cible[i] = rand() % (nv_diff+1);
     }
 
     for (i = 0; i < 4; i++)
     {
-        printf(" %d", T[i]);
+        printf(" %d", seq_cible[i]);
     }
 }
 
-void tentative()
+ResultTentative  tentative(int seq[L])
 {
     int seq_tent[L];
     int i;
     int nb_ok, nb_mp;
     nb_mp = 0;
     nb_ok = 0;
+    ResultTentative Res;
+    Res.Trouve=0;
     // traduction de la seq ?
     // Lecture de la tentative
     for (i = 0; i < 4; i++)
@@ -66,6 +71,11 @@ void tentative()
     printf("\nNombre de mal placé %d \n", nb_mp);
     printf("Nombre de justes %d \n", nb_ok);
     }
+    Res.nbCorrect=nb_ok;
+    Res.nbMalPlaces=nb_mp;
+    Res.Trouve = trouve;
+    
+    return Res;
 }
 
 int EstPresent(int x, int seq_cible[L])
@@ -81,7 +91,22 @@ int EstPresent(int x, int seq_cible[L])
     return 0;
 }
 
-int main()
+char * getRules(){
+    char *rules;
+    *rules = "Ce jeu blablabla";
+    return rules;
+}
+
+
+
+char * fin(){
+    char *messFin;
+    *messFin ="Bravo, vous avez trouvé la séquence";
+    return messFin;
+
+}
+
+/*int main()
 {
     trouve = 0;
     initialisation(seq_cible);
@@ -92,3 +117,4 @@ int main()
 
     return 0;
 }
+*/
