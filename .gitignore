@@ -1,0 +1,7 @@
+# etapes intermediaires
+*.c
+
+# autres
+serveur
+client
+mastermind
