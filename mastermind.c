@@ -11,22 +11,22 @@ int trouve;
 // typedef {}ls_color
 int seq_cible[L];
 
-void initialisation()
+void initialisation(int combinationSecrete[])
 {
     int nv_diff;
-    printf("Choix de la difficulté \n");
-    scanf("%d", &nv_diff);
+    // printf("Choix de la difficulté \n");
+    // scanf("%d", &nv_diff);
     int i;
     // Choix de la séquence de couleur 
     for (i = 0; i < 4; i++)
     {
-        seq_cible[i] = rand() % (nv_diff+1);
+        combinationSecrete[i] = rand() % 5 ;
     }
 
-    for (i = 0; i < 4; i++)
-    {
-        printf(" %d", seq_cible[i]);
-    }
+    // for (i = 0; i < 4; i++)
+    // {
+    //     printf(" %d", seq_cible[i]);
+    // }
 }
 
 ResultTentative  tentative(int seq[L])
@@ -91,17 +91,15 @@ int EstPresent(int x, int seq_cible[L])
     return 0;
 }
 
-char * getRules(){
-    char *rules;
-    *rules = "Ce jeu blablabla";
+char * printRegles(){
+    char rules[] = "Ce jeu blablabla" ;
     return rules;
 }
 
 
 
 char * fin(){
-    char *messFin;
-    *messFin ="Bravo, vous avez trouvé la séquence";
+    char messFin[] ="Bravo, vous avez trouvé la séquence";
     return messFin;
 
 }

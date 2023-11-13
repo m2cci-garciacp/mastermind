@@ -1,12 +1,15 @@
 
-typedef struct {
-    int nbCorrect; int nbMalPlaces; int Trouve;
-}ResultTentative;
 #define L 5
 
-void initialisation();
-char * getRules();
-ResultTentative tentative(int Seq[L]);
-char * fin();
+typedef struct {
+    int nbCorrect; int nbMalPlaces; int trouve;
+} ResultTentative;
+
+void initialisation( &combinationSecrete ) ;
+char * printRegles() ;
+ResultTentative tentative(int Seq[L]) ;
+int Seq[L] texteASeqInt(char *txt) ;
+char * resultatATexte(ResultTentative resultat) ;
+char * fin() ;
 
 

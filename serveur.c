@@ -20,6 +20,7 @@
 #include<stdlib.h>
 
 #include "fon.h"     		/* Primitives de la boite a outils */
+#include "mastermind.h"     		/* Primitives de la boite a outils */
 
 #define SERVICE_DEFAUT "1111"
 #define READ_SIZE 100
@@ -92,18 +93,19 @@ void serveur_appli(char *service)
 		initialisation ( &combinationSecrete ) ;
 		msg_out = printRegles() ;
 		h_write ( socket_client , msg_out , sizeof(msg_out) ) ;
+		// on commence a jouer
 		while ( playing ) {
 			strcpy( msg_in , "" ) ;
 			strcpy( msg_out , "" ) ;
 			result_read = h_reads ( socket_client , msg_in , READ_SIZE );   // ceci possera de problemes car il lit jusque atteint le READ_SIZE
-			// convertir result_read a bonne format
-			result_tentative = tentatil ( result_read ) ;
+			 
+			result_tentative = tentative ( texteToSeqInt(result_read) ) ;
 			//  si reussi -> fin
-			if ( win ) {
+			if ( result_tentative.trouve ) {
 				playing = 0 ;
 				msg_out = fin () ;
 			} else {
-				; // convertir result_tentative a bonne format str pour client
+				msg_out = resultatATexte(ResultTentative resultat) ; // convertir result_tentative a bonne format str pour client
 			}			
 			h_writes ( socket_client , msg_out , strlen(msg_out) );
 		}

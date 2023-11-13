@@ -40,7 +40,10 @@ fon.o :  fon.h fon.c
 client.o : fon.h	client.c 
 	gcc  $(CFLAGS) -c  client.c	
 
-serveur.o : fon.h	serveur.c 
+mastermind.o : mastermind.c	mastermind.h
+	gcc  $(CFLAGS) -c  mastermind.c	
+
+serveur.o : fon.h	serveur.c	mastermind.h
 	gcc  $(CFLAGS) -c  serveur.c	
 
 client : ${OBJ1}	
