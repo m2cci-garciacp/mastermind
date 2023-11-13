@@ -68,9 +68,26 @@ void client_appli (char *serveur,char *service)
 /* procedure correspondant au traitement du client de votre application */
 
 {
-  
+	
 
-/* a completer .....  */
+struct sockaddr_in *p_adr_socket, p_adr_serveur ;
+	int socket_id, socket_serveur ;
+	//unsigned int nb_req_att;
+	char msg [200]="123456789" ;
+	int answer ; 
+	
+	// commun
+	socket_id = h_socket ( AF_INET , SOCK_STREAM ) ;          // int h_socket ( int domaine, int mode );
+	adr_socket( service, NULL , SOCK_STREAM , &p_adr_socket); // void adr_socket( char *service, char *serveur, int typesock, struct sockaddr_in **p_adr_serv);
+	h_bind( socket_id , p_adr_socket ) ;                      // void h_bind ( int num_soc, struct sockaddr_in *p_adr_socket );
+	//client 
+	h_connect( socket_id, p_adr_socket );
+	h_writes ( socket_id , msg, 100 );
+	h_reads( socket_id , msg, 5 );
+	printf ("%s\n", msg);
+	// commun
+	h_close ( socket_id ) ;
+	
 
  }
 
