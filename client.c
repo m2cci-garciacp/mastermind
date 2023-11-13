@@ -15,7 +15,8 @@
 #include <curses.h> 		/* Primitives de gestion d'ecran */
 #include <sys/signal.h>
 #include <sys/wait.h>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "fon.h"   		/* primitives de la boite a outils */
 
@@ -68,21 +69,28 @@ void client_appli (char *serveur,char *service)
 /* procedure correspondant au traitement du client de votre application */
 
 {
-	struct sockaddr_in *p_adr_socket, p_adr_serveur ;
+	struct sockaddr_in *p_adr_socket, *p_adr_serveur ;
 	int socket_id, socket_serveur ;
 	//unsigned int nb_req_att;
-	char msg [200]="123456789" ;
+	char msg_out [200]="123456789" ;
+	char msg_in [200]="" ;
 	int answer ; 
 	
 	// commun
 	socket_id = h_socket ( AF_INET , SOCK_STREAM ) ;          // int h_socket ( int domaine, int mode );
-	adr_socket( service, NULL , SOCK_STREAM , &p_adr_socket); // void adr_socket( char *service, char *serveur, int typesock, struct sockaddr_in **p_adr_serv);
+	adr_socket( service+1, NULL , SOCK_STREAM , &p_adr_socket); // void adr_socket( char *service, char *serveur, int typesock, struct sockaddr_in **p_adr_serv);
+	// comme on est dans la meme machine, le port doit etre different.
+	// quand tu essaiyais, le serveur deja torunait sur le port, donc le client pouvait pas occuper le meme
 	h_bind( socket_id , p_adr_socket ) ;                      // void h_bind ( int num_soc, struct sockaddr_in *p_adr_socket );
-	//client 
-	h_connect( socket_id, p_adr_socket );
-	h_writes ( socket_id , msg, 100 );
-	h_reads( socket_id , msg, 5 );
-	printf ("%s\n", msg);
+	
+	//client : on refait la meme chose pour le serveur
+	adr_socket( service, serveur , SOCK_STREAM , &p_adr_serveur); // void adr_socket( char *service, char *serveur, int typesock, struct sockaddr_in **p_adr_serv);
+	h_connect( socket_id, p_adr_serveur );
+	h_writes ( socket_id , msg_out, 100 );
+	printf ("%s\n", msg_out);
+	h_reads( socket_id , msg_in, 5 );
+	printf ("%s\n", msg_in);
+	// il faudra nettoyer msg_in et msg_out mais ca lair de marcher
 	// commun
 	h_close ( socket_id ) ;
 	
