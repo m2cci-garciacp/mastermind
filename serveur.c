@@ -20,7 +20,7 @@
 #include<stdlib.h>
 
 #include "fon.h"     		/* Primitives de la boite a outils */
-#include "mastermind.h"     		/* Primitives de la boite a outils */
+#include "mastermind.h"     	
 
 #define SERVICE_DEFAUT "1111"
 #define READ_SIZE 100
@@ -77,6 +77,7 @@ void serveur_appli(char *service)
 
 	int combinationSecrete[N_COLORS];
 	int playing = 1 ;
+	ResultTentative result_tentative ;
 	
 	// commun
 	socket_id = h_socket ( AF_INET , SOCK_STREAM ) ;
@@ -90,22 +91,22 @@ void serveur_appli(char *service)
 		socket_client = h_accept ( socket_id , &p_adr_client ) ;
 		// connexion etablie
 		playing = 1 ;
-		initialisation ( &combinationSecrete ) ;
-		msg_out = printRegles() ;
-		h_write ( socket_client , msg_out , sizeof(msg_out) ) ;
+		initialisation ( combinationSecrete ) ;
+		strcpy( msg_out , printRegles() );
+		h_writes ( socket_client , msg_out , sizeof(msg_out) ) ;
 		// on commence a jouer
 		while ( playing ) {
 			strcpy( msg_in , "" ) ;
 			strcpy( msg_out , "" ) ;
 			result_read = h_reads ( socket_client , msg_in , READ_SIZE );   // ceci possera de problemes car il lit jusque atteint le READ_SIZE
 			 
-			result_tentative = tentative ( texteToSeqInt(result_read) ) ;
+			result_tentative = tentative ( texteASeqInt( msg_in ) ) ;
 			//  si reussi -> fin
 			if ( result_tentative.trouve ) {
 				playing = 0 ;
-				msg_out = fin () ;
+				strcpy( msg_out , fin () ) ;
 			} else {
-				msg_out = resultatATexte(ResultTentative resultat) ; // convertir result_tentative a bonne format str pour client
+				strcpy ( msg_out , resultatATexte( result_tentative ) ) ; // convertir result_tentative a bonne format str pour client
 			}			
 			h_writes ( socket_client , msg_out , strlen(msg_out) );
 		}

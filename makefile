@@ -34,22 +34,28 @@ all: ${EXEC}
 
 
 fon.o :  fon.h fon.c
+	echo "Build fon.o"
 	gcc -DDEBUG -c fon.c
 	#gcc -c fon.c
 
 client.o : fon.h	client.c 
+	echo "Build client.o"
 	gcc  $(CFLAGS) -c  client.c	
 
 mastermind.o : mastermind.c	mastermind.h
+	echo "Build mastermind.o"
 	gcc  $(CFLAGS) -c  mastermind.c	
 
 serveur.o : fon.h	serveur.c	mastermind.h
+	echo "Build serveur.o"
 	gcc  $(CFLAGS) -c  serveur.c	
 
-client : ${OBJ1}	
+client : ${OBJ1}
+	echo "Build client"	
 	gcc $(LFLAGS) ${OBJ1} -o client -lcurses   $(OPTIONS)
 
 serveur : ${OBJ2}	
+	echo "Build serveur"	
 	gcc $(LFLAGS) ${OBJ2} -o serveur -lcurses   $(OPTIONS)
 
 

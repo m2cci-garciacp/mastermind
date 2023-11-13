@@ -1,14 +1,14 @@
 
-#define L 5
+#define L 4
 
 typedef struct {
     int nbCorrect; int nbMalPlaces; int trouve;
 } ResultTentative;
 
-void initialisation( &combinationSecrete ) ;
+void initialisation(int combinaisonSecrete[L]) ;
 char * printRegles() ;
 ResultTentative tentative(int Seq[L]) ;
-int Seq[L] texteASeqInt(char *txt) ;
+int * texteASeqInt(char *txt) ;
 char * resultatATexte(ResultTentative resultat) ;
 char * fin() ;
 
