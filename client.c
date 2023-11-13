@@ -68,9 +68,7 @@ void client_appli (char *serveur,char *service)
 /* procedure correspondant au traitement du client de votre application */
 
 {
-	
-
-struct sockaddr_in *p_adr_socket, p_adr_serveur ;
+	struct sockaddr_in *p_adr_socket, p_adr_serveur ;
 	int socket_id, socket_serveur ;
 	//unsigned int nb_req_att;
 	char msg [200]="123456789" ;

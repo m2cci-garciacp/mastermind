@@ -13,6 +13,7 @@
 
 #include<stdio.h>
 #include <curses.h>
+#include <string.h>
 
 #include<sys/signal.h>
 #include<sys/wait.h>
@@ -21,7 +22,8 @@
 #include "fon.h"     		/* Primitives de la boite a outils */
 
 #define SERVICE_DEFAUT "1111"
-#define READ_SIZE 1000
+#define READ_SIZE 100
+#define N_COLORS 4
 
 void serveur_appli (char *service);   /* programme serveur */
 
@@ -67,23 +69,44 @@ void serveur_appli(char *service)
 	struct sockaddr_in *p_adr_socket, p_adr_client ;
 	int socket_id, socket_client ;
 	unsigned int nb_req_att;
-	char msg [READ_SIZE] ;
+	char msg_in [READ_SIZE] ;
+	char msg_out [READ_SIZE] ;
 	int result_read ;
 	int pid ; 
+
+	int combinationSecrete[N_COLORS];
+	int playing = 1 ;
 	
 	// commun
-	socket_id = h_socket ( AF_INET , SOCK_STREAM ) ;             // int h_socket ( int domaine, int mode );
-	adr_socket( service, NULL , SOCK_STREAM , &p_adr_socket);    // void adr_socket( char *service, char *serveur, int typesock, struct sockaddr_in **p_adr_serv);
-	h_bind( socket_id , p_adr_socket ) ;                         // void h_bind ( int num_soc, struct sockaddr_in *p_adr_socket );
+	socket_id = h_socket ( AF_INET , SOCK_STREAM ) ;
+	adr_socket( service, NULL , SOCK_STREAM , &p_adr_socket);
+	h_bind( socket_id , p_adr_socket ) ;
 
 
 	h_listen ( socket_id, nb_req_att ) ;
-	// Serveur iteratif                         // void h_listen ( int num_soc, int nb_req_att );
+	// Serveur iteratif
 	while (true) {
-		socket_client = h_accept ( socket_id , &p_adr_client ) ; // int h_accept( int num_soc, struct sockaddr_in *p_adr_client );
-		printf ("socket: %d\tclient en: %d\n", socket_id , socket_client ) ;
-		answer = h_reads ( socket_client , msg , READ_SIZE );           // int h_reads ( int num_soc, char *tampon, int nb_octets );
-		h_close ( socket_client ) ;                              // void h_close ( int socket ); 
+		socket_client = h_accept ( socket_id , &p_adr_client ) ;
+		// connexion etablie
+		playing = 1 ;
+		initialisation ( &combinationSecrete ) ;
+		msg_out = printRegles() ;
+		h_write ( socket_client , msg_out , sizeof(msg_out) ) ;
+		while ( playing ) {
+			strcpy( msg_in , "" ) ;
+			strcpy( msg_out , "" ) ;
+			result_read = h_reads ( socket_client , msg_in , READ_SIZE );   // ceci possera de problemes car il lit jusque atteint le READ_SIZE
+			// convertir result_read a bonne format
+			result_tentative = tentatil ( result_read ) ;
+			//  si reussi -> fin
+			if ( win ) {
+				playing = 0 ;
+				msg_out = fin () ;
+			} else {
+				; // convertir result_tentative a bonne format str pour client
+			}			
+			h_writes ( socket_client , msg_out , strlen(msg_out) );
+		}
 	}
 	// // Serveur : parallele
 	// while (true) {
