@@ -1,7 +1,10 @@
 # etapes intermediaires
-*.c
+*.o
 
 # autres
 serveur
 client
 mastermind
+
+# dummy
+serveur_dummy*
