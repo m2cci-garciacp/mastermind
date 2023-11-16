@@ -14,7 +14,7 @@ Le jeu de MasterMind peut être joué à distance grâce à un programme client.
 **1.2 Dinamique du jeu**: Au début de la partie, l'ordinateur crée une combination secréte de 4 couleurs. A chaque tour, le joueur donne une combination de 4 couleurs, après laquelle l'ordinateur va repondre :
 - Combien couleurs sont dans la bonne place. 
 - Combien couleurs sont présents dans la combination secrète mais sont mal placés.
-Le joueur compte avec un nombre infinit d'essais mais la puntuation final depend inversement du nombre de tours utilisés.
+La partie se fini quand le joueur trouve la combination secrète. Le nombre d'essais possible est infinit mais la puntuation finale depend inversement du nombre de tours necesités.
 
 ### 2. Application au niveau réseau
 L'application est implement pour pouvoir jouer à distance. Pour cela, l'application compte avec un server TCP et un client TCP. Ce protocole permet d'etablir une connexion avec le client  et s'assure de l'integrité et le transfer de tous les paquets.
