@@ -4,13 +4,12 @@
 
 #include "mastermind.h"
 
-#define LmaxSeq 4
-#define LmaxMess 200
+#define L_SEQUENCE 4
 
 
-char mess_tentative[LmaxMess];
-int seq_cible[LmaxSeq];
-int seq_tentative[LmaxSeq];
+char mess_tentative[SIZE_MAX_MSG];
+int seq_cible[L_SEQUENCE];
+int seq_tentative[L_SEQUENCE];
 
 
 typedef enum {bleu, rouge, vert, jaune, orange,rose,noir} Couleurs;
@@ -18,7 +17,7 @@ typedef enum {bleu, rouge, vert, jaune, orange,rose,noir} Couleurs;
 
 
 //Fonction retournant 1 si l'entier est présent dans une séquence ou 0 si il est absent 
-int EstPresent(int x, int seq_cible[LmaxSeq])
+int EstPresent(int x, int seq_cible[L_SEQUENCE])
 {
     int i;
     for (i = 0; i < 4; i++)
@@ -52,15 +51,15 @@ void initialisation(int combinationSecrete[])
 
 //Présentation des règles
 char * printRegles(){    
-    char rules[LmaxMess] = "Ce jeu blablabla Tiret entre les couleurs rentrées et terminé par un tiret (-) pour l'instant parce que j'ai pas finit " ;
+    char rules[SIZE_MAX_MSG] = "Ce jeu blablabla Tiret entre les couleurs rentrées et terminé par un tiret (-) pour l'instant parce que j'ai pas finit " ;
     return rules;
 }
 
 //Fonction appelée à chaque tentative de découverte. On soumet une séquence pour tenter de deviner la séquence
 //mystère. Cette fonction retourne une structure du type <Int : Nombre de couleurs bien placée, Int: Nombre de couleur présentes mais mal placées, Booléén: Est-ce que la séquence à été découverte ou pas>
-ResultTentative  tentative(int seq[LmaxSeq])
+ResultTentative  tentative(int seq[L_SEQUENCE])
 {
-    int seq_tent[LmaxSeq];
+    int seq_tent[L_SEQUENCE];
     int i;
     int nb_ok, nb_mp;
     nb_mp = 0;
@@ -162,7 +161,7 @@ strToEnum (const char *str)
 
 int *texteASeqInt(char *txt) {
     
-    char couleur[LmaxSeq];
+    char couleur[L_SEQUENCE];
     Couleurs nomCouleur;
     int i, j, c;
     j = 0;
@@ -183,7 +182,7 @@ int *texteASeqInt(char *txt) {
         c = 0;
         j = j+1;
         //Vider le tableau pour prendre en compte la prochaine couleur
-        memset(couleur, 0, LmaxSeq);
+        memset(couleur, 0, L_SEQUENCE);
     
        
     }

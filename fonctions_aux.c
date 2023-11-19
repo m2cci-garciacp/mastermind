@@ -7,13 +7,15 @@
 
 #define SIZE_MAX_MSG 1024
 
+
 // Format du strReseau:
 // xyyystr
 // yyy est la taille du message
 // str est le message a envoyer
 // x est un code : 0 init partie
-//                 1 en jeu
-//                 2 partie fini
+//                 1 en jeu: je t'ecoute
+//                 2 en jeu: je reparle
+//                 3 partie fini
 
 
 void sendMessage ( int socket_client , messageCode codeAndMessage )

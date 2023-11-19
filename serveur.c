@@ -24,8 +24,7 @@
 #include "fonctions_aux.h"     	/* Fontions aux. de connexion mais specifiques au jeu */     	
 
 #define SERVICE_DEFAUT "1111"
-#define READ_SIZE 100
-#define N_COLORS 4
+
 
 void serveur_appli (char *service);   /* programme serveur */
 void partie1Joueur ( int socket_client ) ;
@@ -118,9 +117,6 @@ void partie1Joueur ( int socket_client )
 
 {
 	int combinationSecrete[N_COLORS];
-	char msg_in [READ_SIZE] ;
-	char msg_out [READ_SIZE] ;
-	int result_read ;
 	int playing = 1 ;
 	messageCode codeAndMessage ; 
 	ResultTentative resultatTentative ;
@@ -144,11 +140,14 @@ void partie1Joueur ( int socket_client )
 		if ( resultatTentative.trouve ) 
 		{   
 			//  si trouve on arrete de jouer
-			playing = 0 ;                       // on arrete de jouer
+			playing = 0 ;                                              // on arrete de jouer
 			
-			codeAndMessage.code = 2 ;           // finalisation de la partie
-			codeAndMessage.msg = finPartie () ; // message a transmettre
-
+			codeAndMessage.code = 2 ;                                  // je reparle
+			codeAndMessage.msg = resultatATexte( resultatTentative ) ; // message a transmettre
+			sendMessage ( socket_client , codeAndMessage ) ;
+			
+			codeAndMessage.code = 3 ;                                  // finalisation de la partie
+			codeAndMessage.msg = finPartie () ;                        // message a transmettre
 			sendMessage ( socket_client , codeAndMessage ) ;
 
 			break ;
@@ -156,7 +155,7 @@ void partie1Joueur ( int socket_client )
 		else 
 		{   
 			//  si on a pas trouve on continue a jouer
-			codeAndMessage.code = 1 ;                                  // continuer la partie
+			codeAndMessage.code = 1 ;                                  // continuer la partie: je t'ecoute
 			codeAndMessage.msg = resultatATexte( resultatTentative ) ; // message a transmettre
 
 		}		
