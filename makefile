@@ -1,6 +1,6 @@
 
 OBJ1 = fon.o client.o 
-OBJ2 = fon.o serveur.o 
+OBJ2 = fon.o serveur.o  mastermind.o  fonctions_aux.o
 OPTIONS	=
 # Adaptation a Darwin / MacOS X avec fink
 # Du fait de l'absence de libtermcap on se fait pas mal
@@ -29,7 +29,7 @@ OPTIONS	+= -ltermcap  -lsocket -lnsl
 CFLAGS	+= -I..
 endif
 
-EXEC = ${OBJ1} client ${OBJ3} serveur_dummy
+EXEC = ${OBJ1} client ${OBJ2} serveur
 all: ${EXEC} 	
 
 
@@ -46,7 +46,11 @@ mastermind.o : mastermind.c	mastermind.h
 	echo "Build mastermind.o"
 	gcc  $(CFLAGS) -c  mastermind.c		
 
-serveur.o : fon.h	serveur.c	mastermind.h
+fonctions_aux.o : fonctions_aux.c	fonctions_aux.h  fon.h
+	echo "Build fonctions_aux.o"
+	gcc  $(CFLAGS) -c  fonctions_aux.c		
+
+serveur.o : fon.h	serveur.c	mastermind.h	fonctions_aux.h
 	echo "Build serveur.o"
 	gcc  $(CFLAGS) -c  serveur.c	
 

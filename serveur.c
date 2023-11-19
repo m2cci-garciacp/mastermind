@@ -19,14 +19,17 @@
 #include<sys/wait.h>
 #include<stdlib.h>
 
-#include "fon.h"     		/* Primitives de la boite a outils */
-#include "mastermind.h"     	
+#include "fon.h"     		    /* Primitives de la boite a outils */
+#include "mastermind.h"     	/* Fontions du jeu */
+#include "fonctions_aux.h"     	/* Fontions aux. de connexion mais specifiques au jeu */     	
 
 #define SERVICE_DEFAUT "1111"
 #define READ_SIZE 1000
 #define N_COLORS 4
 
+
 void serveur_appli (char *service);   /* programme serveur */
+void partie1Joueur ( int socket_client ) ;
 
 
 
@@ -69,37 +72,40 @@ void serveur_appli(char *service)
 {
 	struct sockaddr_in *p_adr_socket, p_adr_client ;
 	int socket_id, socket_client ;
-	unsigned int nb_req_att;
+	unsigned int nb_req_att = 100 ;
 	int pid ; 
 	
-	// commun
+	// Ouverture du socket et bind du serveur
 	socket_id = h_socket ( AF_INET , SOCK_STREAM ) ;
 	adr_socket( service, NULL , SOCK_STREAM , &p_adr_socket);
 	h_bind( socket_id , p_adr_socket ) ;
 
-
+	// On ecoute pour des connexions entrantes
 	h_listen ( socket_id, nb_req_att ) ;
-	// Serveur parallele
 	while (true) 
 	{
+		// Des qu'un client essaie de se connecter, on l'accepte
 		socket_client = h_accept ( socket_id , &p_adr_client ) ;
-		// connexion etablie
+		// La connexion est etablie. Maintenant on "clone" le processus avec fork
 		pid = fork () ;
 		if (pid == 0 )
 		{
-	   		// fils
+	   		// Processus fils : on commence la partie. Une fois la partie finie, on
+			// ferme la connexion de chaque coté et on fini le processus fils.
 			partie1Joueur ( socket_id ) ;
 			h_close ( socket_client ) ; 
     		exit ( 0 ) ; 
 		} 
 		else 
 		{
-			// pere
+	   		// Processus père : on ferme la connexion unilateralement (la connexion
+			// est toujours ouverte dans le processus fils).
 			h_close ( socket_client ) ; 
 		}		
 	}	
 
-	// commun
+	// Fermer le socket du serveur. En faite, on va jamais attendre ce ligne de code 
+	// car on est dans une boucle infinit.
 	h_close ( socket_id ) ;
 	
 }
@@ -108,45 +114,52 @@ void serveur_appli(char *service)
 
 
 void partie1Joueur ( int socket_client ) 
+
+/*  C'est la function main du jeu coté serveur. */
+
 {
 	int combinationSecrete[N_COLORS];
 	int playing = 1 ;
-	char msg_in [READ_SIZE] ;
-	char msg_out [READ_SIZE] ;
-	int result_read ;
+	messageCode codeAndMessage ; 
+	ResultTentative resultatTentative ;
 
-	int playing = 1 ;
-	ResultTentative result_tentative ;
 
-	// init
-	calculerCombinaisonSecrete ( combinationSecrete ) ;
+	// Initialiser le jeu: calculer la combinaison secrete et envoyer les régles
+	// au client.
 	initialisation ( combinationSecrete ) ;
-	strcpy( msg_out , printRegles() ) ;
-	//**convertir msg_out format de reseau
-	h_writes ( socket_client , msg_out , sizeof(msg_out) ) ;
+	codeAndMessage.code = 0 ;            // initialisation de la partie
+	codeAndMessage.msg = printRegles() ; // message a transmettre
+	sendMessage ( socket_client , codeAndMessage ) ;
 
-	// on commence a jouer
+	// On a explique les régles, ici on joue.
 	while ( playing ) 
 	{
-		strcpy( msg_in , "" ) ;
-		strcpy( msg_out , "" ) ;
-		result_read = h_reads ( socket_client , msg_in , READ_SIZE ) ;   // ceci possera de problemes car il lit jusque atteint le READ_SIZE
+		
+		codeAndMessage = lireMessage ( socket_client ) ;
+		resultatTentative = tentative( texteASeqInt( codeAndMessage.msg ),combinationSecrete );
+
+		
+		if ( resultatTentative.trouve ) 
+		{   
+			//  si trouve on arrete de jouer
+			playing = 0 ;                                              // on arrete de jouer
 			
-		result_tentative = tentative ( texteASeqInt( msg_in ),combinationSecrete ) ;
-		//  si reussi -> fin
-		if ( result_tentative.trouve ) 
-		{
-			playing = 0 ;
-			strcpy( msg_out , fin () ) ;
-			//**convertir msg_out format de reseau
-			h_writes ( socket_client , msg_out , strlen(msg_out) ) ;
+			codeAndMessage.code = 2 ;                                  // je reparle
+			codeAndMessage.msg = resultatATexte( resultatTentative ) ; // message a transmettre
+			sendMessage ( socket_client , codeAndMessage ) ;
+			
+			codeAndMessage.code = 3 ;                                  // finalisation de la partie
+			codeAndMessage.msg = finPartie () ;                        // message a transmettre
+			sendMessage ( socket_client , codeAndMessage ) ;
+
 			break ;
 		} 
 		else 
-		{
-			strcpy ( msg_out , resultatATexte( result_tentative ) ) ; // convertir result_tentative a bonne format str pour client
-			//**convertir msg_out format de reseau		
-			h_writes ( socket_client , msg_out , strlen(msg_out) ) ;
+		{   
+			//  si on a pas trouve on continue a jouer
+			codeAndMessage.code = 1 ;                                  // continuer la partie: je t'ecoute
+			codeAndMessage.msg = resultatATexte( resultatTentative ) ; // message a transmettre
+
 		}		
 	}
 }

@@ -1,4 +1,3 @@
-
 #define LmaxSeq 4
 
 typedef struct {
@@ -7,8 +6,11 @@ typedef struct {
 
 void initialisation(int combinaisonSecrete[LmaxSeq]) ;
 char * printRegles() ;
+
 ResultTentative  tentative(int seq[LmaxSeq],int seq_cible[LmaxSeq]);
-char * fin() ;
+
+char * finPartie() ;
+
 // faudra changer cettes fonctions, une fois on a decide le format d'envoi
 int * texteASeqInt(char *txt) ;
 char * resultatATexte(ResultTentative resultat) ;

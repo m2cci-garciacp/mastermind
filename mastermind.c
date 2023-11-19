@@ -99,7 +99,8 @@ char *ecritureTentative()//A adapter au client
 // mystère. Cette fonction retourne une structure du type <Int : Nombre de couleurs bien placée, Int: Nombre de couleur présentes mais mal placées, Booléén: Est-ce que la séquence à été découverte ou pas>
 ResultTentative tentative(int seq[LmaxSeq], int seq_cible[LmaxSeq])
 {
-    int seq_aide[LmaxSeq];
+    int seq_aide_cible[LmaxSeq];
+    int seq_aide_tentative[LmaxSeq];
     int i,j;
     int nb_ok, nb_mp;
     nb_mp = 0;
@@ -110,7 +111,8 @@ ResultTentative tentative(int seq[LmaxSeq], int seq_cible[LmaxSeq])
     // Initialisation de la séquence aide à 0
 
     for (i = 0;i<4;i++){
-        seq_aide[i]=0;
+        seq_aide_cible[i]=0;
+        seq_aide_tentative[i]=0;
     }
 
     //Calcul du nombre de correctes
@@ -119,7 +121,8 @@ ResultTentative tentative(int seq[LmaxSeq], int seq_cible[LmaxSeq])
         if (seq[i] == seq_cible[i])
         {
             nb_ok = nb_ok + 1;
-            seq_aide[i]=1;
+            seq_aide_cible[i]=1;
+            seq_aide_tentative[i]=1;
         }
 
     }
@@ -127,10 +130,11 @@ ResultTentative tentative(int seq[LmaxSeq], int seq_cible[LmaxSeq])
     for (i= 0; i < 4; i++)
     {
         for (j=0;j<4;j++){
-           if ((seq[i] == seq_cible[j]) && (seq_aide[j] == 0))
+           if ((seq[i] == seq_cible[j]) && (seq_aide_cible[j] == 0)&& (seq_aide_tentative[i]==0) )
         {
-             nb_mp = nb_mp + 1;
-            seq_aide[j]=1;
+            nb_mp = nb_mp + 1;
+            seq_aide_cible[j]=1;
+            seq_aide_tentative[i]=1;
            
         }
         }
@@ -138,8 +142,6 @@ ResultTentative tentative(int seq[LmaxSeq], int seq_cible[LmaxSeq])
 
     }
     
-
-   
     if (nb_ok == 4)
     {
         Res.trouve = 1;
