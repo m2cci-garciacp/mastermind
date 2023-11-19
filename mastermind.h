@@ -8,7 +8,7 @@ typedef struct {
 void initialisation(int combinaisonSecrete[L]) ;
 char * printRegles() ;
 ResultTentative tentative(int Seq[L]) ;
-char * fin() ;
+char * finPartie() ;
 // faudra changer cettes fonctions, une fois on a decide le format d'envoi
 int * texteASeqInt(char *txt) ;
 char * resultatATexte(ResultTentative resultat) ;

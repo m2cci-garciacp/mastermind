@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "mastermind.h"
+
 #define LmaxSeq 4
 #define LmaxMess 200
 
@@ -122,7 +125,7 @@ char *resultatATexte(ResultTentative resultat)
 }
 
 //Affichage du message de fin de jeu quand la séquence a été découverte
-char * fin(){
+char * finPartie(){
     char messFin[] ="Bravo, vous avez trouvé la séquence";
     return messFin;
 
@@ -175,7 +178,7 @@ int *texteASeqInt(char *txt) {
             j = j + 1;
             c = c+1;
         };
-        nomCouleur = str2enum(couleur);
+        nomCouleur = strToEnum(couleur);
         seq_tentative[i] = nomCouleur;
         c = 0;
         j = j+1;
