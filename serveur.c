@@ -23,7 +23,7 @@
 #include "mastermind.h"     	
 
 #define SERVICE_DEFAUT "1111"
-#define READ_SIZE 100
+#define READ_SIZE 1000
 #define N_COLORS 4
 
 void serveur_appli (char *service);   /* programme serveur */
@@ -132,7 +132,7 @@ void partie1Joueur ( int socket_client )
 		strcpy( msg_out , "" ) ;
 		result_read = h_reads ( socket_client , msg_in , READ_SIZE ) ;   // ceci possera de problemes car il lit jusque atteint le READ_SIZE
 			
-		result_tentative = tentative ( texteASeqInt( msg_in ) ) ;
+		result_tentative = tentative ( texteASeqInt( msg_in ),combinationSecrete ) ;
 		//  si reussi -> fin
 		if ( result_tentative.trouve ) 
 		{
