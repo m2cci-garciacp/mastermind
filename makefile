@@ -1,6 +1,7 @@
 
 OBJ1 = fon.o client.o 
 OBJ2 = fon.o serveur.o  mastermind.o  fonctions_aux.o
+OBJ3 = mastermind_test.o   mastermind.o
 OPTIONS	=
 # Adaptation a Darwin / MacOS X avec fink
 # Du fait de l'absence de libtermcap on se fait pas mal
@@ -29,10 +30,10 @@ OPTIONS	+= -ltermcap  -lsocket -lnsl
 CFLAGS	+= -I..
 endif
 
-EXEC = ${OBJ1} client ${OBJ2} serveur
+EXEC = ${OBJ1} client ${OBJ2} serveur ${OBJ3} mastermind_test
 all: ${EXEC} 	
 
-
+# Programme principal
 fon.o :  fon.h fon.c
 	echo "Build fon.o"
 	gcc -DDEBUG -c fon.c
@@ -61,6 +62,11 @@ client : ${OBJ1}
 serveur : ${OBJ2}	
 	echo "Build serveur"	
 	gcc $(LFLAGS) ${OBJ2} -o serveur -lcurses   $(OPTIONS)
+
+# test du jeu
+mastermind_test : ${OBJ3}	
+	echo "Build mastermind_test"	
+	gcc $(LFLAGS) ${OBJ3} -o mastermind_test -lcurses   $(OPTIONS)
 
 
 

@@ -149,7 +149,7 @@ void partie1Joueur ( int socket_client )
 			sendMessage ( socket_client , codeAndMessage ) ;
 			
 			codeAndMessage.code = 3 ;                                  // finalisation de la partie
-			codeAndMessage.msg = finPartie () ;                        // message a transmettre
+			codeAndMessage.msg = fin () ;                        // message a transmettre
 			sendMessage ( socket_client , codeAndMessage ) ;
 
 			break ;

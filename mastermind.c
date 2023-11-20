@@ -227,7 +227,7 @@ int *texteASeqInt(char *txt)
     return seq_tentative;
 }
 
-int main()
+/* int main()
 {
     // Pour test avec la fonction main
     int combinationSecrete[LmaxSeq];
@@ -255,4 +255,4 @@ int main()
         }
         printf("%s", msg_out);
     }
-}
+} */

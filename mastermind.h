@@ -9,7 +9,7 @@ char * printRegles() ;
 
 ResultTentative  tentative(int seq[LmaxSeq],int seq_cible[LmaxSeq]);
 
-char * finPartie() ;
+char * fin() ;
 
 // faudra changer cettes fonctions, une fois on a decide le format d'envoi
 int * texteASeqInt(char *txt) ;
