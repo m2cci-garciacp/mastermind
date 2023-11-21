@@ -10,7 +10,6 @@ int nv_diff;
 char mess_tentative[LmaxMess];
 char seq_tentative_str[LmaxMess];
 int seq_tentative[LmaxSeq];
-char regles[LmaxMess];
 char messFin[LmaxMess];
 
 typedef enum
@@ -58,7 +57,7 @@ void initialisation(int combinationSecrete[LmaxSeq])
 {
 
     printf("\nChoix de la difficulté (nombre de couleurs possibles entre 2 et 7\n");
-    scanf("%d", &nv_diff);
+    nv_diff=5; //scanf("%d", &nv_diff);
     int i;
     srand(time(NULL));
     // Choix de la séquence de couleur
@@ -74,9 +73,10 @@ void initialisation(int combinationSecrete[LmaxSeq])
 }
 
 // Présentation des règles
-char *printRegles()
+const char * printRegles()
 {
-    return strcpy(regles, "\nBienvenue dans Mastermind ! \nLe but de ce jeu est de deviner le plus rapidement possible une séquence de 4 couleurs dans le bon ordre.\n\nVous allez devoir tenter de deviner la combinaison secrète en soumettant une séquence de 4 couleurs qui vous semble correcte.\n Après chaque tentative il vous sera fait un retour sur le nombre de couleurs correctement placées dans votre séquence ainsi que le nombre de couleurs bien présente dans la combinaison secrète mais mal placées.\n Attention il est possible que la même couleur soit présente plusieurs fois dans la combinaison secrète. Lors de la rentrée d'une tentative il est nécessaire de faire attention à l'orthographe des couleurs et de rentrer la séquence avec des tirets entre chaque couleurs (exemple: jaune-vert-rouge-vert)\nEnfin, il est possible de choisir le nombre de couleurs différentes qui pourra être présente dans la combinaison secrète et donc augmenter la difficulté du jeu ! ");
+    static char regles[2000] = "\nBienvenue dans Mastermind ! \nLe but de ce jeu est de deviner le plus rapidement possible une séquence de 4 couleurs dans le bon ordre.\n\nVous allez devoir tenter de deviner la combinaison secrète en soumettant une séquence de 4 couleurs qui vous semble correcte.\n Après chaque tentative il vous sera fait un retour sur le nombre de couleurs correctement placées dans votre séquence ainsi que le nombre de couleurs bien présente dans la combinaison secrète mais mal placées.\n Attention il est possible que la même couleur soit présente plusieurs fois dans la combinaison secrète. Lors de la rentrée d'une tentative il est nécessaire de faire attention à l'orthographe des couleurs et de rentrer la séquence avec des tirets entre chaque couleurs (exemple: jaune-vert-rouge-vert)\nEnfin, il est possible de choisir le nombre de couleurs différentes qui pourra être présente dans la combinaison secrète et donc augmenter la difficulté du jeu !";
+    return regles ;
 }
 // Faire une fonction qui lit la séquence proposée
 

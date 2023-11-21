@@ -5,7 +5,7 @@ typedef struct {
 } ResultTentative;
 
 void initialisation(int combinaisonSecrete[LmaxSeq]) ;
-char * printRegles() ;
+const char * printRegles() ;
 
 ResultTentative  tentative(int seq[LmaxSeq],int seq_cible[LmaxSeq]);
 

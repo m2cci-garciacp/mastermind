@@ -92,7 +92,7 @@ void serveur_appli(char *service)
 		{
 	   		// Processus fils : on commence la partie. Une fois la partie finie, on
 			// ferme la connexion de chaque coté et on fini le processus fils.
-			partieMasterMind ( socket_id ) ;
+			partieMasterMind ( socket_client ) ;
 			h_close ( socket_client ) ; 
     		exit ( 0 ) ; 
 		} 
@@ -124,6 +124,7 @@ void partieMasterMind ( int socket_client )
 {
 	int combinationSecrete[N_COLORS];
 	int playing = 1 ;
+	char strTampon[200] ;
 	messageCode codeAndMessage ; 
 	ResultTentative resultat ;
 	resultat.trouve = 0 ; // continuons a jouer
@@ -132,10 +133,9 @@ void partieMasterMind ( int socket_client )
 	// Initialiser le jeu: calculer la combinaison secrete et envoyer les régles
 	// au client.
 	initialisation ( combinationSecrete ) ;
-	codeAndMessage.code = 0 ;                                                        // initialisation de la partie
-	printf("%s", printRegles() ) ;
-	strcpy( codeAndMessage.msg , printRegles() ) ;                                             // message des Regles a transmettre
-	printf("%s", codeAndMessage.msg  );
+	codeAndMessage.code = 0 ;                                                                  // initialisation de la partie
+	strcpy( strTampon , printRegles() ) ;                                             // message des Regles a transmettre
+	codeAndMessage.msg = strTampon ;
 	sendMessage ( socket_client , codeAndMessage ) ;
 	printf("serveur: to loop\n");
 	// On a explique les régles, ici on joue.

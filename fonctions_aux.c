@@ -46,7 +46,9 @@ void sendMessage ( int socket , messageCode codeEtMessage )
     strcat( strReseau , code ) ;
     strcat( strReseau , size ) ;
     strcat( strReseau , codeEtMessage.msg ) ;
+    strcat( strReseau , "" ) ;
 
+    printf(">> sendMsg: %s\n", strReseau);
     h_writes ( socket , strReseau , strlen(strReseau) ) ;
 }
 
@@ -78,13 +80,11 @@ messageCode lireMessage ( int socket )
     codeEtMessage.code = (char) atoi(message) ;
     // Lire taille du message. On lit trois bytes, et puis on rajoute manuellement une marque de fin de string.
     h_reads ( socket , taille , 3 ) ;
+    taille[3] = 0 ;
     // Lire le message.
-    h_reads ( socket , message , atoi(taille)+1 ) ;  // +1 ou pas???!!!
+    h_reads ( socket , message , atoi(taille) ) ;  // +1 ou pas???!!! -1...
     codeEtMessage.msg = message ;
 
      return codeEtMessage ;
 }
-
-
-// TODO: tester fonctions aux
 
