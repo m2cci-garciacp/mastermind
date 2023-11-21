@@ -1,12 +1,16 @@
 # etapes intermediaires
 *.o
 
-# autres
+# execs
 serveur
 client
 mastermind
+EssaieCurse
 
 # dummy
 serveur_dummy*
 client_dummy*
 test*
+
+# idk
+a.out
