@@ -5,7 +5,7 @@ On a étudié les different couches réseau et on a travaillé sur les protocole
 
 
 ## Objectif:
-Le jeu de MasterMind peut être joué à distance grâce à un programme client, qui tourne chez le joeueur, et un programme serveur, qui tourne en remote. La partie client contient une console pour interagir avec l'utilisateur et communique avec le serveur, qui fait tourner le jeu en distanciel.
+Le jeu de MasterMind peut être joué à distance grâce à un programme client, qui tourne chez le joueur, et un programme serveur, qui tourne en remote. La partie client contient une console pour interagir avec l'utilisateur et communique avec le serveur, qui fait tourner le jeu en distanciel.
 
 ## Spécificités techniques de l’application:
 ### 1. Régles du jeu: MasterMind

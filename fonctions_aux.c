@@ -28,7 +28,7 @@ void sendMessage ( int socket , messageCode codeEtMessage )
 
     Input: 
         int socket :
-                socket à lire. Il doit avoir la connexion deja etablie. 
+                socket à lire. La connexion est deja etablie. 
     Output:
         messageCode codeEtMessage :
                 structure messageCode = {char code; char * msg}
@@ -41,7 +41,7 @@ void sendMessage ( int socket , messageCode codeEtMessage )
     code[0] = codeEtMessage.code + 0x30 ;
     code[1] = 0x0 ;
     char size[4] ;
-    sprintf(size, "%03d", strlen(codeEtMessage.msg));
+    sprintf(size, "%03ld", strlen(codeEtMessage.msg));
 
     strcat( strReseau , code ) ;
     strcat( strReseau , size ) ;

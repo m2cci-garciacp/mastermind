@@ -29,7 +29,7 @@
 
 
 void serveur_appli (char *service);   /* programme serveur */
-void partie1Joueur ( int socket_client ) ;
+void partieMasterMind ( int socket_client ) ;
 
 
 
@@ -92,7 +92,7 @@ void serveur_appli(char *service)
 		{
 	   		// Processus fils : on commence la partie. Une fois la partie finie, on
 			// ferme la connexion de chaque coté et on fini le processus fils.
-			partie1Joueur ( socket_id ) ;
+			partieMasterMind ( socket_id ) ;
 			h_close ( socket_client ) ; 
     		exit ( 0 ) ; 
 		} 
@@ -113,53 +113,48 @@ void serveur_appli(char *service)
 /******************************************************************************/	
 
 
-void partie1Joueur ( int socket_client ) 
+void partieMasterMind ( int socket_client ) 
+/* Cette fonction est le corps principal d'une partie MasterMind. Elle initialise la combination secrete,
+   communique avec le client et avec le jeu pendant la partie.
 
-/*  C'est la function main du jeu coté serveur. */
-
+    Input: 
+        int socket :
+                socket de la connexion avec le client. La connexion est deja etablie.
+*/
 {
 	int combinationSecrete[N_COLORS];
 	int playing = 1 ;
 	messageCode codeAndMessage ; 
-	ResultTentative resultatTentative ;
+	ResultTentative resultat ;
+	resultat.trouve = 0 ; // continuons a jouer
 
 
 	// Initialiser le jeu: calculer la combinaison secrete et envoyer les régles
 	// au client.
 	initialisation ( combinationSecrete ) ;
-	codeAndMessage.code = 0 ;            // initialisation de la partie
-	codeAndMessage.msg = printRegles() ; // message a transmettre
+	codeAndMessage.code = 0 ;                                                        // initialisation de la partie
+	printf("%s", printRegles() ) ;
+	strcpy( codeAndMessage.msg , printRegles() ) ;                                             // message des Regles a transmettre
+	printf("%s", codeAndMessage.msg  );
+	sendMessage ( socket_client , codeAndMessage ) ;
+	printf("serveur: to loop\n");
+	// On a explique les régles, ici on joue.
+	while ( ! resultat.trouve ) 
+	{
+		// Lire la proposition du client
+		codeAndMessage = lireMessage ( socket_client ) ;
+		resultat = tentative( texteASeqInt( codeAndMessage.msg ) , combinationSecrete );
+
+		// Repondre a la proposition du joueur
+		codeAndMessage.code = 1 + resultat.trouve ;                                  // si la partie continue: je t'ecoute, sinon je reparle
+		codeAndMessage.msg = resultatATexte( resultat ) ;                            // message a transmettre
+		sendMessage ( socket_client , codeAndMessage ) ;
+
+	}
+
+	//  Finaliser la partie
+	codeAndMessage.code = 3 ;                                                        
+	codeAndMessage.msg = fin () ;                                                    // message de fin a transmettre
 	sendMessage ( socket_client , codeAndMessage ) ;
 
-	// On a explique les régles, ici on joue.
-	while ( playing ) 
-	{
-		
-		codeAndMessage = lireMessage ( socket_client ) ;
-		resultatTentative = tentative( texteASeqInt( codeAndMessage.msg ),combinationSecrete );
-
-		
-		if ( resultatTentative.trouve ) 
-		{   
-			//  si trouve on arrete de jouer
-			playing = 0 ;                                              // on arrete de jouer
-			
-			codeAndMessage.code = 2 ;                                  // je reparle
-			codeAndMessage.msg = resultatATexte( resultatTentative ) ; // message a transmettre
-			sendMessage ( socket_client , codeAndMessage ) ;
-			
-			codeAndMessage.code = 3 ;                                  // finalisation de la partie
-			codeAndMessage.msg = fin () ;                        // message a transmettre
-			sendMessage ( socket_client , codeAndMessage ) ;
-
-			break ;
-		} 
-		else 
-		{   
-			//  si on a pas trouve on continue a jouer
-			codeAndMessage.code = 1 ;                                  // continuer la partie: je t'ecoute
-			codeAndMessage.msg = resultatATexte( resultatTentative ) ; // message a transmettre
-
-		}		
-	}
 }

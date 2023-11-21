@@ -1,5 +1,5 @@
 
-OBJ1 = fon.o client.o 
+OBJ1 = fon.o client.o  mastermind.o  fonctions_aux.o
 OBJ2 = fon.o serveur.o  mastermind.o  fonctions_aux.o
 OBJ3 = mastermind_test.o   mastermind.o
 OPTIONS	=
@@ -39,7 +39,7 @@ fon.o :  fon.h fon.c
 	gcc -DDEBUG -c fon.c
 	#gcc -c fon.c
 
-client.o : fon.h	client.c 
+client.o : fon.h	client.c	mastermind.h	fonctions_aux.h
 	echo "Build client.o"
 	gcc  $(CFLAGS) -c  client.c	
 
@@ -47,7 +47,7 @@ mastermind.o : mastermind.c	mastermind.h
 	echo "Build mastermind.o"
 	gcc  $(CFLAGS) -c  mastermind.c		
 
-fonctions_aux.o : fonctions_aux.c	fonctions_aux.h  fon.h
+fonctions_aux.o : fon.h   fonctions_aux.c	fonctions_aux.h
 	echo "Build fonctions_aux.o"
 	gcc  $(CFLAGS) -c  fonctions_aux.c		
 
