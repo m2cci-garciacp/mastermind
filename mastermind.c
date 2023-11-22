@@ -7,7 +7,6 @@
 #define LmaxMess 1000
 
 int nv_diff;
-char mess_tentative[LmaxMess];
 char seq_tentative_str[LmaxMess];
 int seq_tentative[LmaxSeq];
 char messFin[LmaxMess];
@@ -53,11 +52,13 @@ const static struct
 }*/
 
 // Fonction d'initialisation du jeu, préparation de la séquence à découvrir
-void initialisation(int combinationSecrete[LmaxSeq])
+void initialisation(int combinationSecrete[LmaxSeq], char * niveauDiff)
 {
 
-    printf("\nChoix de la difficulté (nombre de couleurs possibles entre 2 et 7\n");
-    nv_diff=5; //scanf("%d", &nv_diff);
+    nv_diff = atoi(niveauDiff);
+    if (nv_diff<5) {nv_diff=5;}
+    else if (nv_diff>7) {nv_diff=7;}
+
     int i;
     srand(time(NULL));
     // Choix de la séquence de couleur
@@ -80,18 +81,32 @@ const char * printRegles()
 }
 // Faire une fonction qui lit la séquence proposée
 
-char *ecritureTentative()//A adapter au client
+const char *introTentative()//A adapter au client
 {
     // Afficher les couleurs possibles
+    static char txt[200] = "" ;
+    static char txtTampon[200] ;
     int j;
-    printf("\nPour rappel les couleurs possibles sont: ");
-    for (j = 0; j < nv_diff; ++j)
+    strcpy( txt, "\nPour rappel les couleurs possibles sont: " );
+    for (j = 0; j < nv_diff-1; ++j)
     {
-        printf("%s-", conversion[j].str);
+        sprintf(txtTampon, "%s-", conversion[j].str);
+        strcat( txt, txtTampon );
     }
-    printf("\nEntrez la séquence de couleur proposée (séparé par des tirets): ");
+    sprintf(txtTampon, "%s", conversion[nv_diff-1].str);
+    strcat( txt, txtTampon );
+
+
+    strcat( txt, "\nEntrez la séquence de couleur proposée (séparé par des tirets): ");
+    return txt;
+}
+const char *ecritureTentative()//A adapter au client
+{
+    // Afficher les couleurs possibles
+    static char seq_tentative_str[200] ;
+
     scanf("%s", seq_tentative_str);
-    printf("Sequence tapée: %s\n", seq_tentative_str);
+
     return seq_tentative_str;
 }
 
@@ -155,8 +170,9 @@ ResultTentative tentative(int seq[LmaxSeq], int seq_cible[LmaxSeq])
 
 // Affichage du message relié au résultat de la tentative
 
-char *resultatATexte(ResultTentative resultat)
+const char *resultatATexte(ResultTentative resultat)
 {
+    static char mess_tentative[LmaxMess];
     memset(mess_tentative, 0, LmaxMess);
     char numToText[10];
     strcpy(mess_tentative, "\nVous avez trouvé ");
@@ -174,7 +190,7 @@ char *resultatATexte(ResultTentative resultat)
 // Affichage du message de fin de jeu quand la séquence a été découverte
 char *fin()
 {
-    strcpy(messFin, "Bravo, vous avez trouvé la séquence !");
+    strcpy(messFin, "\nBravo, vous avez trouvé la séquence !\n");
     return messFin;
 }
 
@@ -195,7 +211,7 @@ str2enum(const char *str)
     return 0;
 }
 
-int *texteASeqInt(char *txt)
+int *texteASeqInt(char txt[])
 {
 
     char couleur[LmaxMess];
@@ -203,8 +219,7 @@ int *texteASeqInt(char *txt)
     int i, j, c;
     j = 0;
     c = 0;
-    strcat(txt, "0");
-
+    
     // Séparation des 4 couleurs différentes
     for (i = 0; i < 4; i++)
     {
@@ -218,7 +233,9 @@ int *texteASeqInt(char *txt)
             j = j + 1;
             c = c + 1;
         };
+        printf(">>%s", couleur);
         nomCouleur = str2enum(couleur);
+        printf("\t%d\n", nomCouleur);
         seq_tentative[i] = nomCouleur;
         c = 0;
         j = j + 1;

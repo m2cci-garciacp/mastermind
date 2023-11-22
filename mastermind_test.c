@@ -16,7 +16,7 @@ int main()
 {
     char mess_tentative[LmaxMess];
     char seq_tentative_str[LmaxMess];
-    int seq_tentative[LmaxSeq];
+    int *seq_tentative;
     // Pour test avec la fonction main
     int combinationSecrete[LmaxSeq];
     char msg_out[LmaxMess];
@@ -24,13 +24,15 @@ int main()
     resultat.trouve = 0;
     strcpy(msg_out, printRegles());
     printf("%s", msg_out);
-    initialisation(combinationSecrete);
+    initialisation(combinationSecrete, "5"); // 5 est la difficulte, en string
 
     while (resultat.trouve == 0)
     {
 
-        strcpy(seq_tentative_str, ecritureTentative());
-        texteASeqInt(seq_tentative_str);
+		strcpy( msg_out , introTentative() ) ;
+        printf("%s", msg_out);
+        scanf("%s", seq_tentative_str);
+        seq_tentative = texteASeqInt(seq_tentative_str);
         resultat = tentative(seq_tentative, combinationSecrete);
 
         if (resultat.trouve != 0)

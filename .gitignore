@@ -5,6 +5,7 @@
 serveur
 client
 mastermind
+mastermind_test
 EssaieCurse
 
 # dummy
@@ -14,3 +15,4 @@ test*
 
 # idk
 a.out
+__MACOSX

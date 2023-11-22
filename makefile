@@ -36,8 +36,8 @@ all: ${EXEC}
 # Programme principal
 fon.o :  fon.h fon.c
 	echo "Build fon.o"
-	gcc -DDEBUG -c fon.c
-	#gcc -c fon.c
+	#gcc -DDEBUG -c fon.c
+	gcc -c fon.c
 
 client.o : fon.h	client.c	mastermind.h	fonctions_aux.h
 	echo "Build client.o"

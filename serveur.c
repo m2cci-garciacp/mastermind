@@ -123,6 +123,7 @@ void partieMasterMind ( int socket_client )
 */
 {
 	int combinationSecrete[N_COLORS];
+	int *combinationJoueur;
 	int playing = 1 ;
 	char strTampon[200] ;
 	messageCode codeAndMessage ; 
@@ -132,23 +133,51 @@ void partieMasterMind ( int socket_client )
 
 	// Initialiser le jeu: calculer la combinaison secrete et envoyer les régles
 	// au client.
-	initialisation ( combinationSecrete ) ;
+
 	codeAndMessage.code = 0 ;                                                                  // initialisation de la partie
 	strcpy( strTampon , printRegles() ) ;                                             // message des Regles a transmettre
 	codeAndMessage.msg = strTampon ;
 	sendMessage ( socket_client , codeAndMessage ) ;
-	printf("serveur: to loop\n");
+
+	// Demander la difficulte
+	codeAndMessage.code = 2 ;
+	codeAndMessage.msg = "\n\nAvec combien couleurs voulez-vous jouer? [5-7]: " ;
+	sendMessage ( socket_client , codeAndMessage ) ;
+	codeAndMessage = lireMessage ( socket_client ) ;
+	// initialiser
+	initialisation ( combinationSecrete , codeAndMessage.msg ) ;
+
 	// On a explique les régles, ici on joue.
 	while ( ! resultat.trouve ) 
 	{
-		// Lire la proposition du client
-		codeAndMessage = lireMessage ( socket_client ) ;
-		resultat = tentative( texteASeqInt( codeAndMessage.msg ) , combinationSecrete );
+		// Proposition du client
+		codeAndMessage.code = 1 ;                                                                  // message de intro de sequence
+		printf(">>>strTampon : %s\n",strTampon) ;
+		strcpy( strTampon , introTentative() ) ;
+		printf(">>>strTampon : %s\n",strTampon) ;
+		printf(">>>msg : %s\n",codeAndMessage.msg) ;
+		codeAndMessage.msg = strTampon ;
+		printf(">>>msg : %s\n",codeAndMessage.msg) ;
+		sendMessage ( socket_client , codeAndMessage ) ;
+
+		codeAndMessage = lireMessage ( socket_client ) ;                                           // recevoir sequence
+		printf("Serveur: sequence %s\n", codeAndMessage.msg);
+		strcpy( strTampon, codeAndMessage.msg);
+
+		combinationJoueur = texteASeqInt( strTampon ) ;
+        //memset(strTampon, 0, sizeof(strTampon));
+		for (int i=0; i<N_COLORS; i++) {printf("\t%d", combinationJoueur[i]);}
+		resultat = tentative( combinationJoueur , combinationSecrete );
 
 		// Repondre a la proposition du joueur
 		codeAndMessage.code = 1 + resultat.trouve ;                                  // si la partie continue: je t'ecoute, sinon je reparle
-		codeAndMessage.msg = resultatATexte( resultat ) ;                            // message a transmettre
+		strcpy ( strTampon , resultatATexte( resultat ) ) ;                            // message a transmettre
+		codeAndMessage.msg = strTampon ;
+        //memset(strTampon, 0, sizeof(strTampon));
 		sendMessage ( socket_client , codeAndMessage ) ;
+
+		memset(strTampon, 0, sizeof(strTampon));
+		codeAndMessage.msg = "";
 
 	}
 

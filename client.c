@@ -81,11 +81,6 @@ void client_appli (char *serveur,char *service)
 
 	// commun
 	socket_id = h_socket ( AF_INET , SOCK_STREAM ) ;          // int h_socket ( int domaine, int mode );
-	adr_socket( service+1, NULL , SOCK_STREAM , &p_adr_socket); // void adr_socket( char *service, char *serveur, int typesock, struct sockaddr_in **p_adr_serv);
-	// comme on est dans la meme machine, le port doit etre different.
-	// quand tu essaiyais, le serveur deja torunait sur le port, donc le client pouvait pas occuper le meme
-	//socket_id = socket_id+1;
-	h_bind( socket_id , p_adr_socket ) ;                     // void h_bind ( int num_soc, struct sockaddr_in *p_adr_socket );
 
 	adr_socket( service, serveur , SOCK_STREAM , &p_adr_serveur); // void adr_socket( char *service, char *serveur, int typesock, struct sockaddr_in **p_adr_serv);
 	h_connect( socket_id, p_adr_serveur );
@@ -99,23 +94,52 @@ void client_appli (char *serveur,char *service)
  }
 
 /*****************************************************************************/
+#include <ctype.h>
 
+int digits_only(char *s)
+{	
+	int i=0;
+    while (s[i]) {
+        if ( s[i]<48 || s[i]>57 ) return 0;
+		i++;
+    }
+
+    return 1;
+}
 
 void partieEnCours ( int socket ) 
 {
-	messageCode codeAndMessage ; 
+	messageCode codeAndMessage ;
+	char strTampon[2000] = "a";
 
 	// attendre pour l'initialisation
 	codeAndMessage = lireMessage ( socket ) ;
 	if (codeAndMessage.code == 0) {
+		// regles
 		printf("%s", codeAndMessage.msg);
 	}
+
+	// demander la difficulte
+	codeAndMessage = lireMessage ( socket ) ;
+	printf("%s", codeAndMessage.msg);
+	scanf("%s", strTampon );
+	
+	codeAndMessage.code = 2 ;
+	codeAndMessage.msg = strTampon ;
+	sendMessage ( socket , codeAndMessage ) ;
+
+
+
 	printf("client: to loop\n");
 	while(codeAndMessage.code != 3)
 	{ 
 		// Lire la proposition du joueur
-		codeAndMessage.msg = ecritureTentative() ;
-		codeAndMessage.code = 1 ; // tour a lautre de parler
+		codeAndMessage = lireMessage ( socket ) ;
+		printf("%s", codeAndMessage.msg) ;
+		strcpy (strTampon , ecritureTentative() );
+		codeAndMessage.msg = strTampon ;
+		printf("Sequence : %s", codeAndMessage.msg) ;
+		codeAndMessage.code = 1 ;                    // tour a lautre de parler
 		sendMessage ( socket , codeAndMessage ) ;
 
 		// Repondre a la proposition du joueur

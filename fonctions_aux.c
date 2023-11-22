@@ -48,7 +48,6 @@ void sendMessage ( int socket , messageCode codeEtMessage )
     strcat( strReseau , codeEtMessage.msg ) ;
     strcat( strReseau , "" ) ;
 
-    printf(">> sendMsg: %s\n", strReseau);
     h_writes ( socket , strReseau , strlen(strReseau) ) ;
 }
 
