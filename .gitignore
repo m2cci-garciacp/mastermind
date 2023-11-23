@@ -15,4 +15,4 @@ test*
 
 # idk
 a.out
-__MACOSX
+__MACOSX/*
