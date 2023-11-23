@@ -92,6 +92,7 @@ void serveur_appli(char *service)
 		{
 	   		// Processus fils : on commence la partie. Une fois la partie finie, on
 			// ferme la connexion de chaque coté et on fini le processus fils.
+			h_close ( socket_id ) ; 
 			partieMasterMind ( socket_client ) ;
 			h_close ( socket_client ) ; 
     		exit ( 0 ) ; 
@@ -128,6 +129,7 @@ void partieMasterMind ( int socket_client )
 	char strTampon[200] ;
 	messageCode codeAndMessage ; 
 	ResultTentative resultat ;
+	int nv_diff ;
 	resultat.trouve = 0 ; // continuons a jouer
 
 
@@ -145,23 +147,20 @@ void partieMasterMind ( int socket_client )
 	sendMessage ( socket_client , codeAndMessage ) ;
 	codeAndMessage = lireMessage ( socket_client ) ;
 	// initialiser
-	initialisation ( combinationSecrete , codeAndMessage.msg ) ;
+	nv_diff = initialisation ( combinationSecrete , codeAndMessage.msg ) ;
 
 	// On a explique les régles, ici on joue.
 	while ( ! resultat.trouve ) 
 	{
 		// Proposition du client
 		codeAndMessage.code = 1 ;                                                                  // message de intro de sequence
-		printf(">>>strTampon : %s\n",strTampon) ;
-		strcpy( strTampon , introTentative() ) ;
-		printf(">>>strTampon : %s\n",strTampon) ;
-		printf(">>>msg : %s\n",codeAndMessage.msg) ;
+		strcpy( strTampon , introTentative(nv_diff) ) ;
 		codeAndMessage.msg = strTampon ;
-		printf(">>>msg : %s\n",codeAndMessage.msg) ;
+
 		sendMessage ( socket_client , codeAndMessage ) ;
 
 		codeAndMessage = lireMessage ( socket_client ) ;                                           // recevoir sequence
-		printf("Serveur: sequence %s\n", codeAndMessage.msg);
+
 		strcpy( strTampon, codeAndMessage.msg);
 
 		combinationJoueur = texteASeqInt( strTampon ) ;
@@ -174,8 +173,9 @@ void partieMasterMind ( int socket_client )
 		strcpy ( strTampon , resultatATexte( resultat ) ) ;                            // message a transmettre
 		codeAndMessage.msg = strTampon ;
         //memset(strTampon, 0, sizeof(strTampon));
-		sendMessage ( socket_client , codeAndMessage ) ;
 
+		sendMessage ( socket_client , codeAndMessage ) ;
+		
 		memset(strTampon, 0, sizeof(strTampon));
 		codeAndMessage.msg = "";
 

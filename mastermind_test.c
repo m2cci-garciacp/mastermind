@@ -24,12 +24,12 @@ int main()
     resultat.trouve = 0;
     strcpy(msg_out, printRegles());
     printf("%s", msg_out);
-    initialisation(combinationSecrete, "5"); // 5 est la difficulte, en string
+    int nv_diff = initialisation(combinationSecrete, "5"); // 5 est la difficulte, en string
 
     while (resultat.trouve == 0)
     {
 
-		strcpy( msg_out , introTentative() ) ;
+		strcpy( msg_out , introTentative(nv_diff) ) ;
         printf("%s", msg_out);
         scanf("%s", seq_tentative_str);
         seq_tentative = texteASeqInt(seq_tentative_str);

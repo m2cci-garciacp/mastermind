@@ -1,7 +1,7 @@
 
-OBJ1 = fon.o client.o  mastermind.o  fonctions_aux.o
-OBJ2 = fon.o serveur.o  mastermind.o  fonctions_aux.o
-OBJ3 = mastermind_test.o   mastermind.o
+OBJ1 = fon.o client.o  mastermind.o  fonctions_aux.o  verificationInput.o
+OBJ2 = fon.o serveur.o  mastermind.o  fonctions_aux.o  verificationInput.o
+OBJ3 = mastermind_test.o   mastermind.o  verificationInput.o
 OPTIONS	=
 # Adaptation a Darwin / MacOS X avec fink
 # Du fait de l'absence de libtermcap on se fait pas mal
@@ -39,13 +39,17 @@ fon.o :  fon.h fon.c
 	#gcc -DDEBUG -c fon.c
 	gcc -c fon.c
 
-client.o : fon.h	client.c	mastermind.h	fonctions_aux.h
+client.o : fon.h	client.c	mastermind.h	fonctions_aux.h  verificationInput.h
 	echo "Build client.o"
 	gcc  $(CFLAGS) -c  client.c	
 
-mastermind.o : mastermind.c	mastermind.h
+mastermind.o : mastermind.c	mastermind.h  verificationInput.h
 	echo "Build mastermind.o"
 	gcc  $(CFLAGS) -c  mastermind.c		
+
+verificationInput.o : verificationInput.c	verificationInput.h	 mastermind.h 
+	echo "Build verificationInput.o"
+	gcc  $(CFLAGS) -c  verificationInput.c		
 
 fonctions_aux.o : fon.h   fonctions_aux.c	fonctions_aux.h
 	echo "Build fonctions_aux.o"

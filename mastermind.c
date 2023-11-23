@@ -2,39 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+#include "verificationInput.h"
 #include "mastermind.h"
+
 #define LmaxSeq 4
 #define LmaxMess 1000
 
-int nv_diff;
+//int nv_diff;
 char seq_tentative_str[LmaxMess];
 int seq_tentative[LmaxSeq];
 char messFin[LmaxMess];
-
-typedef enum
-{
-    bleu,
-    rouge,
-    vert,
-    jaune,
-    orange,
-    rose,
-    noir
-} Couleurs;
-//"Tableau" de conversion des string en enum Couleurs
-const static struct
-{
-    Couleurs val;
-    const char *str;
-} conversion[] = {
-    {bleu, "bleu"},
-    {rouge, "rouge"},
-    {vert, "vert"},
-    {jaune, "jaune"},
-    {orange, "orange"},
-    {rose, "rose"},
-    {noir, "noir"},
-};
 
 // Fonction retournant 1 si l'entier est présent dans une séquence ou 0 si il est absent
 /*int EstPresent(int x, int seq_cible[LmaxSeq],int seq_comment[LmaxSeq] )
@@ -52,10 +30,10 @@ const static struct
 }*/
 
 // Fonction d'initialisation du jeu, préparation de la séquence à découvrir
-void initialisation(int combinationSecrete[LmaxSeq], char * niveauDiff)
+int initialisation(int combinationSecrete[LmaxSeq], char * niveauDiff)
 {
 
-    nv_diff = atoi(niveauDiff);
+    int nv_diff = atoi(niveauDiff);
     if (nv_diff<5) {nv_diff=5;}
     else if (nv_diff>7) {nv_diff=7;}
 
@@ -71,6 +49,7 @@ void initialisation(int combinationSecrete[LmaxSeq], char * niveauDiff)
     {
         printf(" %d \n", combinationSecrete[i]); //A enlever
     }
+    return nv_diff ;
 }
 
 // Présentation des règles
@@ -81,7 +60,7 @@ const char * printRegles()
 }
 // Faire une fonction qui lit la séquence proposée
 
-const char *introTentative()//A adapter au client
+const char *introTentative(int nv_diff)//A adapter au client
 {
     // Afficher les couleurs possibles
     static char txt[200] = "" ;
@@ -100,14 +79,16 @@ const char *introTentative()//A adapter au client
     strcat( txt, "\nEntrez la séquence de couleur proposée (séparé par des tirets): ");
     return txt;
 }
-const char *ecritureTentative()//A adapter au client
+void ecritureTentative(char seq_tentative_str[], char str0[], int nv_diff)//A adapter au client
 {
     // Afficher les couleurs possibles
-    static char seq_tentative_str[200] ;
+    strcpy(seq_tentative_str, "a");
 
-    scanf("%s", seq_tentative_str);
-
-    return seq_tentative_str;
+    while (!strEnFormat(seq_tentative_str, nv_diff))
+    {
+        printf("%s", str0) ;
+        scanf("%s", seq_tentative_str);
+    }
 }
 
 // Fonction appelée à chaque tentative de découverte. On soumet une séquence pour tenter de deviner la séquence
@@ -182,7 +163,7 @@ const char *resultatATexte(ResultTentative resultat)
     strcat(mess_tentative, " bonnes couleurs bien placées et ");
     sprintf(numToText, "%d", resultat.nbMalPlaces);
     strcat(mess_tentative, numToText);
-    strcat(mess_tentative, " couleurs présentes mais mal placées");
+    strcat(mess_tentative, " couleurs présentes mais mal placées\n");
 
     return mess_tentative;
 }
@@ -233,9 +214,7 @@ int *texteASeqInt(char txt[])
             j = j + 1;
             c = c + 1;
         };
-        printf(">>%s", couleur);
         nomCouleur = str2enum(couleur);
-        printf("\t%d\n", nomCouleur);
         seq_tentative[i] = nomCouleur;
         c = 0;
         j = j + 1;
@@ -244,32 +223,5 @@ int *texteASeqInt(char txt[])
     return seq_tentative;
 }
 
-/* int main()
-{
-    // Pour test avec la fonction main
-    int combinationSecrete[LmaxSeq];
-    char msg_out[LmaxMess];
-    ResultTentative resultat;
-    resultat.trouve = 0;
-    strcpy(msg_out, printRegles());
-    printf("%s", msg_out);
-    initialisation(combinationSecrete);
 
-    while (resultat.trouve == 0)
-    {
 
-        strcpy(seq_tentative_str, ecritureTentative());
-        texteASeqInt(seq_tentative_str);
-        resultat = tentative(seq_tentative, combinationSecrete);
-
-        if (resultat.trouve != 0)
-        {
-            strcpy(msg_out, fin());
-        }
-        else
-        {
-            strcpy(msg_out, resultatATexte(resultat)); // convertir result_tentative a bonne format str pour client
-        }
-        printf("%s", msg_out);
-    }
-} */

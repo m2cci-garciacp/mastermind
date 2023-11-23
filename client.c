@@ -21,6 +21,7 @@
 #include "fon.h"   		            /* primitives de la boite a outils */
 #include "fonctions_aux.h"   		/* fonctions auxiliaires de connexion */
 #include "mastermind.h"   		    /* fonctions mastermind */
+#include "verificationInput.h"   	/* verification Input */
 
 #define SERVICE_DEFAUT "1111"
 #define SERVEUR_DEFAUT "127.0.0.1"
@@ -94,23 +95,12 @@ void client_appli (char *serveur,char *service)
  }
 
 /*****************************************************************************/
-#include <ctype.h>
-
-int digits_only(char *s)
-{	
-	int i=0;
-    while (s[i]) {
-        if ( s[i]<48 || s[i]>57 ) return 0;
-		i++;
-    }
-
-    return 1;
-}
 
 void partieEnCours ( int socket ) 
 {
 	messageCode codeAndMessage ;
 	char strTampon[2000] = "a";
+	int nv_diff;
 
 	// attendre pour l'initialisation
 	codeAndMessage = lireMessage ( socket ) ;
@@ -121,8 +111,13 @@ void partieEnCours ( int socket )
 
 	// demander la difficulte
 	codeAndMessage = lireMessage ( socket ) ;
-	printf("%s", codeAndMessage.msg);
-	scanf("%s", strTampon );
+	while (!digitsOnly(strTampon)) {
+		printf("%s", codeAndMessage.msg);
+		scanf("%s", strTampon );
+	}
+	sprintf( strTampon , "%d", intoRange(strTampon, 4, 7) ) ;
+	nv_diff = atoi(strTampon) ;
+	
 	
 	codeAndMessage.code = 2 ;
 	codeAndMessage.msg = strTampon ;
@@ -135,22 +130,25 @@ void partieEnCours ( int socket )
 	{ 
 		// Lire la proposition du joueur
 		codeAndMessage = lireMessage ( socket ) ;
-		printf("%s", codeAndMessage.msg) ;
-		strcpy (strTampon , ecritureTentative() );
+		//printf("%s", codeAndMessage.msg) ;
+		ecritureTentative(strTampon, codeAndMessage.msg, nv_diff) ;
 		codeAndMessage.msg = strTampon ;
-		printf("Sequence : %s", codeAndMessage.msg) ;
+		//printf("Sequence : %s\n", codeAndMessage.msg) ;
 		codeAndMessage.code = 1 ;                    // tour a lautre de parler
 		sendMessage ( socket , codeAndMessage ) ;
 
 		// Repondre a la proposition du joueur
 		codeAndMessage = lireMessage ( socket ) ;
-		printf("%s", codeAndMessage.msg);
+		printf("code: %d %s", codeAndMessage.code, codeAndMessage.msg);
 		// Verifier s'il y a quelque chose encore a dire: fin
 		while (codeAndMessage.code == 2)
-		{
+		{	
 			codeAndMessage = lireMessage ( socket ) ;
 			printf("%s", codeAndMessage.msg);
 		}
+
+		memset(strTampon, 0, sizeof(strTampon));
+		codeAndMessage.msg = "";
 	}
 
 
