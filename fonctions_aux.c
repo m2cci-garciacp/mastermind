@@ -9,81 +9,62 @@
 
 
 // Format du strReseau:
-// xyyystr
-// yyy est la taille du message
-// str est le message a envoyer
-// x est un code : 0 init partie
-//                 1 en jeu: je t'ecoute
-//                 2 en jeu: je reparle
-//                 3 partie fini
+// yystr
+// yy est la longeur du string
+// str est le message
 
 
-void sendMessage ( int socket , messageCode codeEtMessage )
+void sendMessage ( int socket , char str[] )
 /* Cette fonction envoi un message dans le socket. Le message a envoyer compte avec un
    code et un msg text. Le message envoyé sera dans le format au début du fichier:
-    - 1 octet pour un code
-    - 3 pour la taille du message a recevoir
+    - 2 pour la taille du message a recevoir
     - le message a recevoir de taille variable
    Ce format permet de lire la taille exacte de octets.
 
     Input: 
         int socket :
                 socket à lire. La connexion est deja etablie. 
+        char str[] :
+                message a envoyer. 
     Output:
-        messageCode codeEtMessage :
-                structure messageCode = {char code; char * msg}
-                ceci contient le code transmit, en fonction de l'état du jeu
-                           et le mmsg transmit, en format string.
+        void
 */
 {
     char strReseau[SIZE_MAX_MSG] = "" ;
-    char code[2] ;
-    code[0] = codeEtMessage.code + 0x30 ;
-    code[1] = 0x0 ;
-    char size[4] ;
-    sprintf(size, "%03ld", strlen(codeEtMessage.msg));
+    char size[3] ;
+    sprintf(size, "%02ld", strlen(str) );
 
-    strcat( strReseau , code ) ;
     strcat( strReseau , size ) ;
-    strcat( strReseau , codeEtMessage.msg ) ;
+    strcat( strReseau , str ) ;
     strcat( strReseau , "" ) ;
 
     h_writes ( socket , strReseau , strlen(strReseau) ) ;
 }
 
-messageCode lireMessage ( int socket )
+void lireMessage ( int socket , char * str)
 /* Cette fonction attendre jusqu'a un message arrive dans le socket et le lit.
    Ce message suit le format au début du fichier:
-    - 1 octet pour un code
-    - 3 pour la taille du message a recevoir
+    - 2 pour la taille du message a recevoir
     - le message a recevoir de taille variable
    Ce format permet de lire la taille exacte de octets.
 
     Input: 
         int socket :
                 socket à lire. Il doit avoir la connexion deja etablie. 
+        char * str :
+                Pointeur ou on va ecrire le message. 
     Output:
-        messageCode codeEtMessage :
-                structure messageCode = {char code; char * msg}
-                ceci contient le code transmit, en fonction de l'état du jeu
-                           et le mmsg transmit, en format string.
+        void
 */
 {
-    char message[SIZE_MAX_MSG] = "" ;
-    char taille[4] ;
-    messageCode codeEtMessage ;
+    char taille[3] ;
 
-    // Lire code du message. On lit un byte, et puis on rajoute manuellement une marque de fin de string.
-    h_reads ( socket , message , 1 ) ;
-    message[1] = 0x0 ;
-    codeEtMessage.code = (char) atoi(message) ;
+    
     // Lire taille du message. On lit trois bytes, et puis on rajoute manuellement une marque de fin de string.
-    h_reads ( socket , taille , 3 ) ;
-    taille[3] = 0 ;
+    h_reads ( socket , taille , 2 ) ;
+    taille[2] = 0 ;
+
     // Lire le message.
-    h_reads ( socket , message , atoi(taille) ) ;  // +1 ou pas???!!! -1...
-    codeEtMessage.msg = message ;
-
-     return codeEtMessage ;
+    h_reads ( socket , str , atoi(taille) ) ;  // +1 ou pas???!!! -1...
+    str[atoi(taille)] = 0 ;
 }
-

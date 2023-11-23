@@ -1,7 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
+
 #include "verificationInput.h"
-#include "mastermind.h"
+#include "mastermindClient.h"
 
 int strEnFormat(char *str, int nv_diff)
 {

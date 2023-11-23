@@ -20,8 +20,9 @@
 #include<stdlib.h>
 
 #include "fon.h"     		    /* Primitives de la boite a outils */
-#include "mastermind.h"     	/* Fontions du jeu */
-#include "fonctions_aux.h"     	/* Fontions aux. de connexion mais specifiques au jeu */     	
+#include "mastermindServeur.h"     	/* Fontions du jeu */
+#include "fonctions_aux.h"     	/* Fontions aux. de connexion mais specifiques au jeu */   
+#include "outils.h"     	/* Fontions aux. de connexion mais specifiques au jeu */     	
 
 #define SERVICE_DEFAUT "1111"
 #define READ_SIZE 1000
@@ -123,67 +124,30 @@ void partieMasterMind ( int socket_client )
                 socket de la connexion avec le client. La connexion est deja etablie.
 */
 {
-	int combinationSecrete[N_COLORS];
-	int *combinationJoueur;
-	int playing = 1 ;
-	char strTampon[200] ;
-	messageCode codeAndMessage ; 
-	ResultTentative resultat ;
-	int nv_diff ;
-	resultat.trouve = 0 ; // continuons a jouer
+	int combinationSecrete[N_COLORS+1];
+	int combinationJoueur[N_COLORS+1];
+	int reponse[N_COLORS+1];
+	char message[200];
+	char message2[200];
+	int nvDiff ;
+	int L ;
+	int nbTours = 0 ;
 
-
-	// Initialiser le jeu: calculer la combinaison secrete et envoyer les régles
-	// au client.
-
-	codeAndMessage.code = 0 ;                                                                  // initialisation de la partie
-	strcpy( strTampon , printRegles() ) ;                                             // message des Regles a transmettre
-	codeAndMessage.msg = strTampon ;
-	sendMessage ( socket_client , codeAndMessage ) ;
-
-	// Demander la difficulte
-	codeAndMessage.code = 2 ;
-	codeAndMessage.msg = "\n\nAvec combien couleurs voulez-vous jouer? [5-7]: " ;
-	sendMessage ( socket_client , codeAndMessage ) ;
-	codeAndMessage = lireMessage ( socket_client ) ;
+	// Lire difficulté
+	lireMessage ( socket_client , message) ;
+	strToSeqInt( message , &nvDiff, &L) ;
 	// initialiser
-	nv_diff = initialisation ( combinationSecrete , codeAndMessage.msg ) ;
+	initialisation ( combinationSecrete , nvDiff ) ;
 
 	// On a explique les régles, ici on joue.
-	while ( ! resultat.trouve ) 
-	{
-		// Proposition du client
-		codeAndMessage.code = 1 ;                                                                  // message de intro de sequence
-		strcpy( strTampon , introTentative(nv_diff) ) ;
-		codeAndMessage.msg = strTampon ;
-
-		sendMessage ( socket_client , codeAndMessage ) ;
-
-		codeAndMessage = lireMessage ( socket_client ) ;                                           // recevoir sequence
-
-		strcpy( strTampon, codeAndMessage.msg);
-
-		combinationJoueur = texteASeqInt( strTampon ) ;
-        //memset(strTampon, 0, sizeof(strTampon));
-		for (int i=0; i<N_COLORS; i++) {printf("\t%d", combinationJoueur[i]);}
-		resultat = tentative( combinationJoueur , combinationSecrete );
-
-		// Repondre a la proposition du joueur
-		codeAndMessage.code = 1 + resultat.trouve ;                                  // si la partie continue: je t'ecoute, sinon je reparle
-		strcpy ( strTampon , resultatATexte( resultat ) ) ;                            // message a transmettre
-		codeAndMessage.msg = strTampon ;
-        //memset(strTampon, 0, sizeof(strTampon));
-
-		sendMessage ( socket_client , codeAndMessage ) ;
-		
-		memset(strTampon, 0, sizeof(strTampon));
-		codeAndMessage.msg = "";
-
+	while ( L!=4 ) 
+	{	
+		nbTours ++;
+		lireMessage ( socket_client , message ) ;
+		strToSeqInt( message , combinationJoueur, &L) ;
+		tentative(combinationJoueur, combinationSecrete, reponse, &L, nbTours);
+		seqIntToStr ( reponse , L , message ) ;
+		sendMessage ( socket_client , message ) ;
 	}
-
-	//  Finaliser la partie
-	codeAndMessage.code = 3 ;                                                        
-	codeAndMessage.msg = fin () ;                                                    // message de fin a transmettre
-	sendMessage ( socket_client , codeAndMessage ) ;
 
 }

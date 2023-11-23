@@ -1,8 +1,4 @@
 
 
-typedef struct {char   code ;
-                char*  msg ;
-                } messageCode ;
-
-void sendMessage ( int socket_client , messageCode codeAndMessage ) ;
-messageCode lireMessage ( int socket_client ) ;
+void sendMessage ( int socket , char str[] ) ;
+void lireMessage ( int socket , char * str) ;

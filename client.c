@@ -20,8 +20,9 @@
 
 #include "fon.h"   		            /* primitives de la boite a outils */
 #include "fonctions_aux.h"   		/* fonctions auxiliaires de connexion */
-#include "mastermind.h"   		    /* fonctions mastermind */
+#include "mastermindClient.h"   	/* fonctions mastermind cote client */
 #include "verificationInput.h"   	/* verification Input */
+#include "outils.h"             	/* outils de conversion */
 
 #define SERVICE_DEFAUT "1111"
 #define SERVEUR_DEFAUT "127.0.0.1"
@@ -98,58 +99,37 @@ void client_appli (char *serveur,char *service)
 
 void partieEnCours ( int socket ) 
 {
-	messageCode codeAndMessage ;
+	char message[2000] ;
 	char strTampon[2000] = "a";
 	int nv_diff;
+	int L;
+	int sequence[4];
 
-	// attendre pour l'initialisation
-	codeAndMessage = lireMessage ( socket ) ;
-	if (codeAndMessage.code == 0) {
-		// regles
-		printf("%s", codeAndMessage.msg);
-	}
+	// regles
+	imprimerRegles();
 
 	// demander la difficulte
-	codeAndMessage = lireMessage ( socket ) ;
-	while (!digitsOnly(strTampon)) {
-		printf("%s", codeAndMessage.msg);
-		scanf("%s", strTampon );
-	}
-	sprintf( strTampon , "%d", intoRange(strTampon, 4, 7) ) ;
-	nv_diff = atoi(strTampon) ;
-	
-	
-	codeAndMessage.code = 2 ;
-	codeAndMessage.msg = strTampon ;
-	sendMessage ( socket , codeAndMessage ) ;
+	nv_diff = demanderDifficulte() ;
+	seqIntToStr(&nv_diff, 1, message) ;
+	sendMessage ( socket , message ) ;
 
-
-
-	printf("client: to loop\n");
-	while(codeAndMessage.code != 3)
+	while( L!=4 )
 	{ 
-		// Lire la proposition du joueur
-		codeAndMessage = lireMessage ( socket ) ;
-		//printf("%s", codeAndMessage.msg) ;
-		ecritureTentative(strTampon, codeAndMessage.msg, nv_diff) ;
-		codeAndMessage.msg = strTampon ;
-		//printf("Sequence : %s\n", codeAndMessage.msg) ;
-		codeAndMessage.code = 1 ;                    // tour a lautre de parler
-		sendMessage ( socket , codeAndMessage ) ;
+		// Lire la sequence du joueur
+		ecritureTentative(sequence, &L, nv_diff) ;
+		// Convertir la sequence en message
+		seqIntToStr( sequence , L, message) ;
+		// Envoyer la sequence au serveur
+		sendMessage ( socket , message ) ;
 
-		// Repondre a la proposition du joueur
-		codeAndMessage = lireMessage ( socket ) ;
-		printf("code: %d %s", codeAndMessage.code, codeAndMessage.msg);
-		// Verifier s'il y a quelque chose encore a dire: fin
-		while (codeAndMessage.code == 2)
-		{	
-			codeAndMessage = lireMessage ( socket ) ;
-			printf("%s", codeAndMessage.msg);
-		}
-
-		memset(strTampon, 0, sizeof(strTampon));
-		codeAndMessage.msg = "";
+		// Recevoir reponse du serveur
+		lireMessage ( socket , message) ;
+		// Reponse str a reponse en SeqInt
+		strToSeqInt( message, sequence, &L) ;
+		// Faire le retour: sequence[0] sont les bien places et sequence[1] sont les mal places
+		faireRetour(sequence[0], sequence[1]) ;
 	}
-
-
+	// On sort de la boucle quand la sequence de retour est plus longue que de normal : 4
+	// parce qu'on inclu le nombre de tours dans sequence[2] et le score en sequence[3]
+	donnerPoints(sequence[2], sequence[3]) ;
 }
