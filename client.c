@@ -69,54 +69,67 @@ int main(int argc, char *argv[])
 }
 
 /*****************************************************************************/
-void client_appli (char *serveur,char *service)
+void client_appli (char *serveur, char *service)
 
 /* procedure correspondant au traitement du client de votre application */
 
 {
-	struct sockaddr_in *p_adr_socket, *p_adr_serveur ;
-	int socket_id, socket_serveur ;
-	//unsigned int nb_req_att;
-	char msg_out [200] ;
-	char msg_in [200]="" ;
-	int answer ; 
+	struct sockaddr_in *pAdrServeur ;
+	int socketId ;
 
-	// commun
-	socket_id = h_socket ( AF_INET , SOCK_STREAM ) ;          // int h_socket ( int domaine, int mode );
+	// init socket
+	socketId = h_socket ( AF_INET , SOCK_STREAM ) ;
 
-	adr_socket( service, serveur , SOCK_STREAM , &p_adr_serveur); // void adr_socket( char *service, char *serveur, int typesock, struct sockaddr_in **p_adr_serv);
-	h_connect( socket_id, p_adr_serveur );
+	// Configuration pour la connexion du serveur
+	adr_socket( service, serveur , SOCK_STREAM , &pAdrServeur);
 
-	partieEnCours ( socket_id ) ;
+	// Connect the serveur
+	h_connect( socketId, pAdrServeur );
 
-	// commun
-	h_close ( socket_id ) ;
-	
+	// Initier partie
+	partieEnCours ( socketId ) ;
+
+	// Fermer connexion
+	h_close ( socketId ) ;	
 
  }
 
 /*****************************************************************************/
 
-void partieEnCours ( int socket ) 
-{
-	char message[2000] ;
-	char strTampon[2000] = "a";
-	int nv_diff;
-	int L;
-	int sequence[4];
+void partieEnCours ( int socket )
+/*
+	C'est la fonction principal d'un jeu de MasterMind. Elle presente les regles, demande la difficulte
+	communique avec le serveur a chaque tour et imprime les reponses au joueur..
 
-	// regles
+	Input:
+		int socket : 
+		 		socket de la connexion avec le serveur. La connexion est deja etablie.
+	Output:
+		void
+*/
+{
+	char message[2000] ;         // String tampon pour les messages
+	int nvDiff;                 // Niveau de difficulté
+	int sequence[4];             // Tableau contenant la sequence de la combination du joueur: taille L
+	int L=0;                     // Taille de la sequence de la combination du joeueur.
+
+	// Presenter les regles du jeu
 	imprimerRegles();
 
-	// demander la difficulte
-	nv_diff = demanderDifficulte() ;
-	seqIntToStr(&nv_diff, 1, message) ;
+	// Demander la difficulte: nombre coleurs
+	nvDiff = demanderDifficulte() ;
+	seqIntToStr(&nvDiff, 1, message) ;
 	sendMessage ( socket , message ) ;
 
+	// Boucle principal: L depend de la reponse du serveur.
+	// Elle vaut normalement 2 sauf quand la partie est fini, qui vaut 4.
+	// Normalement, la Sequence de retour inclu le nombre de bien places en Sequence[0],
+	// et le nombre de mal places en Sequence [1]. Seulement quand la partie est finie,
+	// la Sequence inclu le nbTours et le Score en Sequence[2] et Sequence[3] respectivement.
 	while( L!=4 )
 	{ 
-		// Lire la sequence du joueur
-		ecritureTentative(sequence, &L, nv_diff) ;
+		// Lire la sequence du joueur (verification d'input)
+		ecritureTentative(sequence, &L, nvDiff) ;
 		// Convertir la sequence en message
 		seqIntToStr( sequence , L, message) ;
 		// Envoyer la sequence au serveur
@@ -129,7 +142,6 @@ void partieEnCours ( int socket )
 		// Faire le retour: sequence[0] sont les bien places et sequence[1] sont les mal places
 		faireRetour(sequence[0], sequence[1]) ;
 	}
-	// On sort de la boucle quand la sequence de retour est plus longue que de normal : 4
-	// parce qu'on inclu le nombre de tours dans sequence[2] et le score en sequence[3]
+	// Informer du score.
 	donnerPoints(sequence[2], sequence[3]) ;
 }

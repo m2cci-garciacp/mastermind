@@ -3,16 +3,17 @@
 #include <string.h>
 #include <time.h>
 
-#include "verificationInput.h"
-#include "mastermindClient.h"
-#include "outils.h"
+#include "verificationInput.h"         // Fonctions de verification d'input
+#include "mastermindClient.h"          // Fonctions du jeu, coté client
+#include "outils.h"                    // Fonctions de conversion
 
-// #define LmaxSeq 4
-// #define LmaxMess 1000
 
-void texteASeqInt(char txt[], int* seq_tentative, int* L) ;
+void texteASeqInt(char txt[], int* seqTentative, int* L) ;
 
-void imprimerRegles () 
+void imprimerRegles ()
+/*
+    Imprime les régles du jeu.
+*/
 {
     printf("\nBienvenue dans Mastermind ! \nLe but de ce jeu est de deviner le plus rapidement possible une ");
     printf("séquence de 4 couleurs dans le bon ordre.\n\nVous allez devoir tenter de deviner la combinaison ");
@@ -27,57 +28,108 @@ void imprimerRegles ()
 }
 
 
-int demanderDifficulte () 
+int demanderDifficulte ()
+/*
+    Demande la difficulté du jeu au joueur. Et verifie que la reponse est correcte.
+    Reitere si ce n'est pas le cas.
+
+    Output:
+        int :
+                difficulté du jeu: entre 5-7 couleurs.
+*/ 
 {
 	char input[2000] = "a";
-    char msg[] = "\n\nAvec combien couleurs voulez-vous jouer? [5-7]: ";
+    const char msg[] = "\n\nAvec combien couleurs voulez-vous jouer? [5-7]: ";
 
+    // Verifier si il y a que de chiffres dans le string
     while (!digitsOnly(input)) {
 		printf("%s", msg);
 		scanf("%s", input );
 	}
-	sprintf( input , "%d", intoRange(input, 4, 7) ) ;
+    // Le forcer dans le range correcte.
+	sprintf( input , "%d", intoRange(input, 5, 7) ) ;
 	return atoi(input) ;
 }
 
-// Fonction d'initialisation du jeu, préparation de la séquence à découvrir
+
 void introduirTentative(char niveauDiff)
+/*
+    Rappel au joueur les couleurs en jeu.
+
+    Input :
+        char niveauDiff :
+                niveau de difficulté: nombre de couleurs en jeu.
+    
+    Output :
+        void
+*/
 {
     // Afficher les couleurs possibles
     char introTentative[1000] = "\nPour rappel les couleurs possibles sont:  " ;
-    int j;
-    for (j = 0; j < niveauDiff-1; ++j)
+    
+    // Obtenir les couleurs
+    for (int j = 0; j < niveauDiff-1; ++j)
     {
-        sprintf(introTentative, "%s%s-", introTentative,conversion[j].str);
+        sprintf(introTentative, "%s%s-", introTentative, conversion[j].str);
     }
-    sprintf(introTentative, "%s%s-", introTentative,conversion[niveauDiff-1].str);
-
+    sprintf(introTentative, "%s%s-", introTentative, conversion[niveauDiff-1].str);
+    // Suite du message
     strcat( introTentative, "\nEntrez la séquence de couleur proposée (séparé par des tirets):\n");
-
+    // Imprimer le message
     printf( "%s", introTentative) ;
 }
 
 
-void ecritureTentative(int sequence[], int*L, int nv_diff)
+void ecritureTentative(int sequence[], int*L, int nvDiff)
+/*
+    Ecrit le texte de chaque tour, rappelant les couleurs en jeu et recupere la
+    combination du joueur, en verifiant que les couleurs correspondent aux couleurs en jeu
+    et au format demandé. Sinon on reitere.
+
+    Input :
+        int sequence [] :
+                tableau ou on va ecrire la sequence du joueur
+        int* L :
+                taille du tableau. Normalement est toujours 4.
+        int nvDiff :
+                niveau de difficulté, nombre de couleurs en jeu.
+
+    Outpu :
+        void
+*/
 {
     char seq_tentative_str[1000] = "a";
 
     // Verifier:
     //  - 4 couleurs
-    //  - separes par des '-'
+    //  - separés par des '-'
     //  - les couleurs correspondent aux couleurs donnés
-    while (!strEnFormat(seq_tentative_str, nv_diff))
+    while (!strEnFormat(seq_tentative_str, nvDiff))
     {
-        introduirTentative(nv_diff) ;
+        introduirTentative(nvDiff) ;
         scanf("%s", seq_tentative_str);
     }
 
-    //
+    // Transformer le text des couleurs en sequence des entiers.
     texteASeqInt(seq_tentative_str, sequence, L) ;
 }
 
-// Affichage du message relié au résultat de la tentative
-void faireRetour(int nbBienPlaces, int nbMalPlaces) 
+
+void faireRetour(int nbBienPlaces, int nbMalPlaces)
+/*
+    Fait le retour au joueur en fonction de son combination:
+    Il verbalise le nombre de couleurs bien placés, nbBienPlaces, et le nombre de 
+    couleurs mal placés, nbMalPlaces.
+
+    Input :
+        int nbBienPlaces :
+                nombre de couleurs bien placés
+        int nbMalPlaces :
+                nombre de couleurs mal placés
+    
+    Output : 
+        void
+*/
 {
     char mess_tentative[1000] = "\nVous avez trouvé ";
 
@@ -89,8 +141,20 @@ void faireRetour(int nbBienPlaces, int nbMalPlaces)
     printf("%s", mess_tentative);
 }
 
-// Affichage du message de fin de jeu quand la séquence a été découverte
+
 void donnerPoints(int nbTours, int score)
+/*
+    Affiche du message de fin de jeu quand la séquence a été découverte. 
+    Il inclu le nombre de tours et le score final.
+
+    Input :
+        int nbTours :
+                nombre de tours utilisés pour trouver la combination secrète.
+        int score :
+                le nombre de points obtenus.
+    Output :
+        void
+*/
 {
     char messFin[1000] = "\nBravo, vous avez trouvé la séquence secrète en ";
 
@@ -102,11 +166,22 @@ void donnerPoints(int nbTours, int score)
 
 // CONVERSION DU TEXTE EN SEQUENCE D'ENTIERS
 
-// Fonction de conversion
-Couleurs
-str2enum(const char *str)
+
+Couleurs str2enum(const char *str)
+/*
+    Fonction de conversion de string a couleur du jeu.
+
+    Input :
+        char *str :
+                couleur du jeu en format string.
+
+    Output :
+        Couleurs :
+                couleur du jeu
+*/
 {
     int j;
+
     for (j = 0; j < sizeof(conversion) / sizeof(conversion[0]); ++j)
     {
         if (!strcmp(str, conversion[j].str))
@@ -117,9 +192,24 @@ str2enum(const char *str)
     return 0;
 }
 
-void texteASeqInt(char txt[], int* seq_tentative, int* L)
-{
+void texteASeqInt(char txt[], int* seqTentative, int* L)
+/*
+    Converti un texte, txt, avec des couleurs en string, separés par de tirés, '-'
+    a une séquence d'entiers, seqTentative, de taille L.
 
+    Input :
+        char txt[] :
+                string d'entrée, a convertir.
+        int* seqTentative :
+                tableau où la séquence va être écrite.
+        int* L :
+                taille du tableau. Normalement L=4.
+    
+    Output :
+        void
+
+*/
+{
     char couleur[1000];
     Couleurs nomCouleur;
     int i, j, c;
@@ -133,19 +223,14 @@ void texteASeqInt(char txt[], int* seq_tentative, int* L)
         memset(couleur, 0, sizeof(couleur));
         while ((txt[j] != '-') && (txt[j] != '0'))
         {
-
             couleur[c] = txt[j];
-
             j = j + 1;
             c = c + 1;
         };
         nomCouleur = str2enum(couleur);
-        seq_tentative[i] = nomCouleur;
+        seqTentative[i] = nomCouleur;
         c = 0;
         j = j + 1;
     }
     *L = i ;
 }
-
-
-

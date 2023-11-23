@@ -3,27 +3,35 @@
 #include <string.h>
 #include <time.h>
 
-#include "mastermindServeur.h"
+#include "mastermindServeur.h"         // Fonctions du jeu , coté serveur
 
 
 int calculerPontuation(int nbTours) ;
 
 
-// Fonction d'initialisation du jeu, préparation de la séquence à découvrir
-void initialisation(int* combinationSecrete, int niveauDiff)
-{
 
-    int i;
+void initialisation(int* combinationSecrete, int niveauDiff)
+/*
+    Fonction d'initialisation du jeu. Etant donné le niveau de difficulté
+    crée la combination secrète de manière pseudo-aleatoire, et la stocke
+    dans combinationSecrete.
+
+    Input:
+        int niveauDiff :
+                niiveau de difficulte: nombre de couleurs en jeu
+    int* combinationSecrete :
+                pointeur du tableau ou on stocke la combination secrète.
+
+    Output :
+        void
+*/
+{
     srandom(time(NULL));
-    // Choix de la séquence de couleur
-    for (i = 0; i < 4; i++)
+    // Choix de la combination secrète
+    printf("Sequence secrete: ");
+    for (int i = 0; i < 4; i++)
     {
         combinationSecrete[i] = random() % niveauDiff;
-    }
-
-    printf("Sequence secrete: ");
-    for (i = 0; i < 4; i++)
-    {
         printf("%d ", combinationSecrete[i]);
     }
     printf("\n");
@@ -32,12 +40,34 @@ void initialisation(int* combinationSecrete, int niveauDiff)
 
 
 
-// Fonction appelée à chaque tentative de découverte. On soumet une séquence pour tenter de deviner la séquence
-// mystère. Cette fonction retourne une structure du type <Int : Nombre de couleurs bien placée, Int: Nombre de couleur présentes mais mal placées, Booléén: Est-ce que la séquence à été découverte ou pas
-void tentative(int seq[LmaxSeq],int sequenceSecrete[LmaxSeq], int* reponse, int*L, int nbTours)
+void tentative(int seq[],int combinationSecrete[], int* reponse, int*L, int nbTours)
+/*
+    Fonction appelée à chaque tour. On soumet une combination du joueur, seq, pour tenter de 
+    deviner la séquence mystère, combinationSecrete . Elle calcule les nombre de couleurs bien places
+    et le nombre de couleurs mal places.
+    
+    Input :
+        int seq[] :
+                Tableau avec combination du joueur.
+        int combinationSecrete[] :
+                Tableau avec combination secrète à deviner.
+        int* reponse :
+                Tableau avec la reponse: 
+                    - reponse[0] : les couleurs bien placés
+                    - reponse[1] : les couleurs mal placés
+                    - reponse[2] : si la combination du joueur est correcte : nombre de tours.
+                    - reponse[1] : si la combination du joueur est correcte : score final.
+        int*L :
+                Taille de la reponse:
+                    - L=2 : si la combination du joueur est incorrecte, la partie continue.
+                    - L=4 : si la combination du joueur est   correcte, la partie est finie.
+        int nbTours :
+                Nombre de tours courant.
+    Output :
+        void
+*/
 {
-    int seq_aide_cible[LmaxSeq];
-    int seq_aide_tentative[LmaxSeq];
+    int seqAide[LmaxSeq];
     int i,j;
     int nb_ok, nb_mp;
     nb_mp = 0;
@@ -46,45 +76,41 @@ void tentative(int seq[LmaxSeq],int sequenceSecrete[LmaxSeq], int* reponse, int*
 
     // Initialisation de la séquence aide à 0
     for (i = 0;i<4;i++){
-        seq_aide_cible[i]=0;
-        seq_aide_tentative[i]=0;
+        seqAide[i]=0;
     }
 
     //Calcul du nombre de correctes
     printf("NbCOrrectes:\n");
     for (i = 0; i < 4; i++)
     {   
-
-        printf("%d-%d=%d\n",seq[i], sequenceSecrete[i],seq[i]-sequenceSecrete[i]);
-        if (seq[i] == sequenceSecrete[i])
+        if (seq[i] == combinationSecrete[i])
         {
             nb_ok = nb_ok + 1;
-            seq_aide_cible[i]=1;
-            seq_aide_tentative[i]=1;
+            seqAide[i]=1;
         }
 
     }
     reponse[0] = nb_ok;
 
-    if (nb_ok != 4) {
-    //Puis calcul du nombre de mal placés
+    if (nb_ok != 4) 
+    {
+        // Puis calcul du nombre de mal placés
         for (i= 0; i < 4; i++)
         {
-            for (j=0;j<4;j++){
-            if ((seq[i] == sequenceSecrete[j]) && (seq_aide_cible[j] == 0)&& (seq_aide_tentative[i]==0) )
+            for (j=0;j<4;j++)
             {
-                nb_mp = nb_mp + 1;
-                seq_aide_cible[j]=1;
-                seq_aide_tentative[i]=1;
-            
+                if ( (seq[i] == combinationSecrete[j]) && (seqAide[i]==0) )
+                {
+                    nb_mp = nb_mp + 1;
+                    seqAide[i]=1;            
+                }
             }
-            }
-        
-
         }
         reponse[1] = nb_mp;
-    } else { // nb_ok == 4
-    printf("tous bien places\n");
+    } 
+    else 
+    {
+        // Tous correctes : la taille de la reponse est 4.
         reponse[1] = nb_mp;
         reponse[2] = nbTours;
         reponse[3] = calculerPontuation(nbTours);
@@ -93,8 +119,22 @@ void tentative(int seq[LmaxSeq],int sequenceSecrete[LmaxSeq], int* reponse, int*
 
 }
 
-int calculerPontuation(int nbTours) {
-    switch (nbTours){
+int calculerPontuation(int nbTours)
+/*
+    Cette fonction calcule la ponctuation en fonction du nombre de tours, nbTours.
+
+    Input :
+        int nbTours :
+                nombre de tours tuilisés pour trouver la combination secrète
+    
+    Output :
+        int :
+            ponctuation qui vaut dans les cas extremes: 100 pour nbTours=1, 0 pour nbTours>=18
+    
+*/
+{
+    switch (nbTours)
+    {
         case 1: return 100;
         case 2: return 90;
         case 3: return 80;

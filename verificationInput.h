@@ -1,9 +1,9 @@
 
 
-int strEnFormat(char *str, int nv_diff) ;
+int strEnFormat(char *str, int nvDiff) ;
 
 int digitsOnly(char *s) ;
 
 int intoRange(char *s, int a, int b) ;
 
-int coleurEnJeu (char * word, int nv_diff) ;
+int coleurEnJeu (char * word, int nvDiff) ;

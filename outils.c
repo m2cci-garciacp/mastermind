@@ -2,9 +2,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "outils.h"
+#include "outils.h"            /* Outils de conversion */
 
-void strToSeqInt ( char str[] , int* Seq, int* L) {
+
+void strToSeqInt ( char str[] , int* Seq, int* L) 
+/*
+    Convertit un string d'entiers et espaces à une sequence d'entiers de longeur L.
+    Les espaces sont les delimitateur des numèros.
+
+    Input: 
+        char str[] :
+                string d'entree.
+        int* Seq :
+                Pointeur de sequence d'integer ou on va stocker la sequence. 
+        int* L :
+                Pointeur de longeur de sequence. 
+    Output:
+        void
+*/
+{
     
     int i=0, j=0;
     *L=0;
@@ -32,6 +48,19 @@ void strToSeqInt ( char str[] , int* Seq, int* L) {
 }
 
 void seqIntToStr ( int* Seq, int L, char *str ) 
+/*
+    Convertit à une sequence d'entiers de longeur L à un string d'entiers separés par espaces.
+
+    Input: 
+        int* Seq :
+                Pointeur de sequence des entiers pour ecrire dans str. 
+        int  L :
+                Longeur de sequence. 
+        char str[] :
+                string de sortie.
+    Output:
+        void
+*/
 {
     str[0] = 0 ;
     for (int i=0; i<L; i++) {

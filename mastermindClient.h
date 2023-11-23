@@ -10,6 +10,7 @@ typedef enum
     rose,
     noir
 } Couleurs;
+
 //"Tableau" de conversion des string en enum Couleurs
 const static struct
 {
@@ -29,7 +30,7 @@ void imprimerRegles () ;
 
 int demanderDifficulte () ;
 
-void ecritureTentative(int sequence[], int*L, int nv_diff) ;
+void ecritureTentative(int sequence[], int*L, int nvDiff) ;
 
 void faireRetour(int nbBienPlaces, int nbMalPlaces) ;
 

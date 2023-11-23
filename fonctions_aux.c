@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "fonctions_aux.h"
-#include "fon.h"
+#include "fon.h"                  /* Fonctions de connexion */
+#include "fonctions_aux.h"        /* Fonctions auxiliares de connexion */
 
 #define SIZE_MAX_MSG 1024
 
