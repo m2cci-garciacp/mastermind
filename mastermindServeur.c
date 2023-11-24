@@ -67,17 +67,12 @@ void tentative(int seq[],int combinationSecrete[], int* reponse, int*L, int nbTo
         void
 */
 {
-    int seqAide[LmaxSeq];
+    int seqAide[LmaxSeq], seqAideJoueur[LmaxSeq]; 
     int i,j;
     int nb_ok, nb_mp;
     nb_mp = 0;
     nb_ok = 0;
     (*L) = 2;
-
-    // Initialisation de la séquence aide à 0
-    for (i = 0;i<4;i++){
-        seqAide[i]=0;
-    }
 
     //Calcul du nombre de correctes
     printf("NbCOrrectes:\n");
@@ -87,6 +82,12 @@ void tentative(int seq[],int combinationSecrete[], int* reponse, int*L, int nbTo
         {
             nb_ok = nb_ok + 1;
             seqAide[i]=1;
+            seqAideJoueur[i]=1; 
+        } 
+        else
+        {
+            seqAide[i]=0;
+            seqAideJoueur[i]=0;
         }
 
     }
@@ -99,10 +100,11 @@ void tentative(int seq[],int combinationSecrete[], int* reponse, int*L, int nbTo
         {
             for (j=0;j<4;j++)
             {
-                if ( (seq[i] == combinationSecrete[j]) && (seqAide[i]==0) )
+                if ( (seq[i] == combinationSecrete[j]) && (seqAideJoueur[i]==0)  && (seqAide[j]==0) )
                 {
                     nb_mp = nb_mp + 1;
-                    seqAide[i]=1;            
+                    seqAide[j]=1;
+                    seqAideJoueur[i]=1;         
                 }
             }
         }
