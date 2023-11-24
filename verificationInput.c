@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "verificationInput.h"          /* Fonctions pour verifier les inputs du joueur */
 #include "mastermindClient.h"           /* Fonctions du Jeu Client */
@@ -39,7 +40,8 @@ int strEnFormat(char *str, int nvDiff)
 		j++;
 	}
 
-    if ( (coleurEnJeu(word, nvDiff) && cpt==3) || (strcmp(word,"")==0 && cpt==4 )) {
+    if ( (coleurEnJeu(word, nvDiff) && cpt==3) || (strcmp(word,"")==0 && cpt==4 )) 
+    {        
         return 1;
     } else {
         return 0;

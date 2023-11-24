@@ -75,7 +75,6 @@ void tentative(int seq[],int combinationSecrete[], int* reponse, int*L, int nbTo
     (*L) = 2;
 
     //Calcul du nombre de correctes
-    printf("NbCOrrectes:\n");
     for (i = 0; i < 4; i++)
     {   
         if (seq[i] == combinationSecrete[i])

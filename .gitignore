@@ -16,4 +16,11 @@ test*
 # idk
 a.out
 __MACOSX/*
-#
+
+
+#test
+testing/inputData/data/*
+testing/inputData/result.txt
+testing/segmentationFaultInInput/data/*
+testing/segmentationFaultInInput/scripts/makeData
+testing/segmentationFaultInInput/result.txt

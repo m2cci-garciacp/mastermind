@@ -109,8 +109,7 @@ void ecritureTentative(int sequence[], int*L, int nvDiff)
         introduirTentative(nvDiff) ;
         scanf("%s", seq_tentative_str);
     }
-
-    // Transformer le text des couleurs en sequence des entiers.
+	// Transformer le text des couleurs en sequence des entiers.
     texteASeqInt(seq_tentative_str, sequence, L) ;
 }
 
@@ -221,12 +220,13 @@ void texteASeqInt(char txt[], int* seqTentative, int* L)
     {
         // Vider le tableau pour prendre en compte la prochaine couleur
         memset(couleur, 0, sizeof(couleur));
-        while ((txt[j] != '-') && (txt[j] != '0'))
+        while ((txt[j] != '-') && (txt[j] != 0))
         {
             couleur[c] = txt[j];
             j = j + 1;
             c = c + 1;
         };
+        couleur[c] = 0;
         nomCouleur = str2enum(couleur);
         seqTentative[i] = nomCouleur;
         c = 0;

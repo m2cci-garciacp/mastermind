@@ -34,7 +34,7 @@ void sendMessage ( int socket , char str[] )
     char size[3] ;
     sprintf(size, "%02ld", strlen(str) );
 
-    strcat( strReseau , size ) ;
+    strcpy( strReseau , size ) ;
     strcat( strReseau , str ) ;
     strcat( strReseau , "" ) ;
 

@@ -109,10 +109,11 @@ void partieEnCours ( int socket )
 */
 {
 	char message[2000] ;         // String tampon pour les messages
-	int nvDiff;                 // Niveau de difficulté
+	int nvDiff;                  // Niveau de difficulté
 	int sequence[4];             // Tableau contenant la sequence de la combination du joueur: taille L
 	int L=0;                     // Taille de la sequence de la combination du joeueur.
 
+	
 	// Presenter les regles du jeu
 	imprimerRegles();
 
@@ -141,6 +142,7 @@ void partieEnCours ( int socket )
 		strToSeqInt( message, sequence, &L) ;
 		// Faire le retour: sequence[0] sont les bien places et sequence[1] sont les mal places
 		faireRetour(sequence[0], sequence[1]) ;
+		
 	}
 	// Informer du score.
 	donnerPoints(sequence[2], sequence[3]) ;
