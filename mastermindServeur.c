@@ -12,13 +12,13 @@ int calculerPontuation(int nbTours) ;
 
 void initialisation(int* combinationSecrete, int niveauDiff)
 /*
-    Fonction d'initialisation du jeu. Etant donné le niveau de difficulté
+    Fonction d'initialisation du jeu. Prend en compte le niveau de difficulté choisi et
     crée la combination secrète de manière pseudo-aleatoire, et la stocke
     dans combinationSecrete.
 
     Input:
         int niveauDiff :
-                niiveau de difficulte: nombre de couleurs en jeu
+                niveau de difficulte: nombre de couleurs en jeu
     int* combinationSecrete :
                 pointeur du tableau ou on stocke la combination secrète.
 
