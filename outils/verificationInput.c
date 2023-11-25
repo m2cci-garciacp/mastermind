@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "verificationInput.h"          /* Fonctions pour verifier les inputs du joueur */
-#include "mastermindClient.h"           /* Fonctions du Jeu Client */
+#include "verificationInput.h"                        /* Fonctions pour verifier les inputs du joueur */
+#include "./../client/mastermindClient.h"           /* Fonctions du Jeu Client */
 
 int strEnFormat(char *str, int nvDiff)
 /*

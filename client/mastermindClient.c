@@ -3,9 +3,9 @@
 #include <string.h>
 #include <time.h>
 
-#include "verificationInput.h"         // Fonctions de verification d'input
 #include "mastermindClient.h"          // Fonctions du jeu, coté client
-#include "outils.h"                    // Fonctions de conversion
+#include "./../outils/verificationInput.h"           // Fonctions de verification d'input
+#include "./../outils/outils.h"                      // Fonctions de conversion
 
 
 void texteASeqInt(char txt[], int* seqTentative, int* L) ;

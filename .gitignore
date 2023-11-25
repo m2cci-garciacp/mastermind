@@ -2,8 +2,8 @@
 *.o
 
 # execs
-serveur
-client
+serveurMasterMind
+clientMasterMind
 mastermind
 mastermind_test
 EssaieCurse
@@ -16,3 +16,4 @@ test*
 # idk
 a.out
 __MACOSX/*
+.~lock.automates.odg#

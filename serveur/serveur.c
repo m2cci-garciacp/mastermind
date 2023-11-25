@@ -19,10 +19,10 @@
 #include<sys/wait.h>
 #include<stdlib.h>
 
-#include "fon.h"     		    /* Primitives de la boite a outils */
-#include "mastermindServeur.h"     	/* Fontions du jeu */
-#include "fonctions_aux.h"     	/* Fontions aux. de connexion mais specifiques au jeu */   
-#include "outils.h"     	/* Fontions aux. de connexion mais specifiques au jeu */     	
+#include "./../connexion/fon.h"     		        /* Primitives de la boite a outils */
+#include "./../connexion/fonctions_aux.h"        	/* Fontions aux. de connexion mais specifiques au jeu */
+#include "mastermindServeur.h"                  	/* Fontions du jeu */   
+#include "./../outils/outils.h"     	            /* Fontions aux. de connexion mais specifiques au jeu */     	
 
 #define SERVICE_DEFAUT "1111"
 #define READ_SIZE 1000

@@ -18,11 +18,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "fon.h"   		            /* primitives de la boite a outils */
-#include "fonctions_aux.h"   		/* fonctions auxiliaires de connexion */
-#include "mastermindClient.h"   	/* fonctions mastermind cote client */
-#include "verificationInput.h"   	/* verification Input */
-#include "outils.h"             	/* outils de conversion */
+#include "./../connexion/fon.h"   		            /* primitives de la boite a outils */
+#include "./../connexion/fonctions_aux.h"   		/* fonctions auxiliaires de connexion */
+#include "mastermindClient.h"     	/* fonctions mastermind cote client */
+#include "./../outils/verificationInput.h"   	    /* verification Input */
+#include "./../outils/outils.h"             	    /* outils de conversion */
 
 #define SERVICE_DEFAUT "1111"
 #define SERVEUR_DEFAUT "127.0.0.1"

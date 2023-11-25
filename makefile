@@ -1,6 +1,6 @@
 
-OBJ1 = fon.o client.o  mastermindClient.o  fonctions_aux.o  verificationInput.o  outils.o
-OBJ2 = fon.o serveur.o  mastermindServeur.o  fonctions_aux.o  outils.o
+OBJ1 = ./connexion/fon.o ./client/client.o  ./client/mastermindClient.o  ./connexion/fonctions_aux.o  ./outils/verificationInput.o  ./outils/outils.o
+OBJ2 = ./connexion/fon.o ./serveur/serveur.o  ./serveur/mastermindServeur.o  ./connexion/fonctions_aux.o  ./outils/outils.o
 #OBJ3 = mastermind_test.o   mastermind.o  verificationInput.o
 OPTIONS	=
 # Adaptation a Darwin / MacOS X avec fink
@@ -34,46 +34,46 @@ EXEC = ${OBJ1} client ${OBJ2} serveur# ${OBJ3} mastermind_test
 all: ${EXEC} 	
 
 # Programme principal
-fon.o :  fon.h fon.c
+./connexion/fon.o :  ./connexion/fon.h ./connexion/fon.c
 	echo "Build fon.o"
-	#gcc -DDEBUG -c fon.c
-	gcc -c fon.c
+	#gcc -DDEBUG -c ./connexion/fon.c
+	gcc -c ./connexion/fon.c -o ./connexion/fon.o
 
-client.o : fon.h	client.c	mastermindClient.h	fonctions_aux.h  verificationInput.h  outils.h
+./client/client.o : ./connexion/fon.h	./client/client.c	./client/mastermindClient.h	./connexion/fonctions_aux.h  ./outils/verificationInput.h  ./outils/outils.h
 	echo "Build client.o"
-	gcc  $(CFLAGS) -c  client.c	
+	gcc  $(CFLAGS) -c  ./client/client.c	-o  ./client/client.o
 
-mastermindClient.o : mastermindClient.c	mastermindClient.h  verificationInput.h  outils.h
+./client/mastermindClient.o : ./client/mastermindClient.c	./client/mastermindClient.h  ./outils/verificationInput.h  ./outils/outils.h
 	echo "Build mastermindClient.o"
-	gcc  $(CFLAGS) -c  mastermindClient.c	
+	gcc  $(CFLAGS) -c  ./client/mastermindClient.c	-o  ./client/mastermindClient.o
 
-mastermindServeur.o : mastermindServeur.c	mastermindServeur.h
+./serveur/mastermindServeur.o : ./serveur/mastermindServeur.c	./serveur/mastermindServeur.h
 	echo "Build mastermindServeur.o"
-	gcc  $(CFLAGS) -c  mastermindServeur.c		
+	gcc  $(CFLAGS) -c  ./serveur/mastermindServeur.c	-o  ./serveur/mastermindServeur.o		
 
-verificationInput.o : verificationInput.c	verificationInput.h	 mastermindClient.h 
+./outils/verificationInput.o : ./outils/verificationInput.c	./outils/verificationInput.h	 ./client/mastermindClient.h 
 	echo "Build verificationInput.o"
-	gcc  $(CFLAGS) -c  verificationInput.c	
+	gcc  $(CFLAGS) -c  ./outils/verificationInput.c		-o  ./outils/verificationInput.o	
 
-outils.o : outils.c	outils.h 
+./outils/outils.o : ./outils/outils.c	./outils/outils.h 
 	echo "Build outils.o"
-	gcc  $(CFLAGS) -c  outils.c		
+	gcc  $(CFLAGS) -c  ./outils/outils.c	-o  ./outils/outils.o		
 
-fonctions_aux.o : fon.h   fonctions_aux.c	fonctions_aux.h
+./connexion/fonctions_aux.o : ./connexion/fon.h   ./connexion/fonctions_aux.c	./connexion/fonctions_aux.h
 	echo "Build fonctions_aux.o"
-	gcc  $(CFLAGS) -c  fonctions_aux.c		
+	gcc  $(CFLAGS) -c  ./connexion/fonctions_aux.c	-o  ./connexion/fonctions_aux.o
 
-serveur.o : fon.h	serveur.c	mastermindServeur.h	fonctions_aux.h  outils.h
+./serveur/serveur.o : ./connexion/fon.h	./serveur/serveur.c	./serveur/mastermindServeur.h	./connexion/fonctions_aux.h  ./outils/outils.h
 	echo "Build serveur.o"
-	gcc  $(CFLAGS) -c  serveur.c	
+	gcc  $(CFLAGS) -c  ./serveur/serveur.c -o  ./serveur/serveur.o
 
 client : ${OBJ1}
 	echo "Build client"	
-	gcc $(LFLAGS) ${OBJ1} -o client -lcurses   $(OPTIONS)
+	gcc $(LFLAGS) ${OBJ1} -o clientMasterMind -lcurses   $(OPTIONS)
 
 serveur : ${OBJ2}	
 	echo "Build serveur"	
-	gcc $(LFLAGS) ${OBJ2} -o serveur -lcurses   $(OPTIONS)
+	gcc $(LFLAGS) ${OBJ2} -o serveurMasterMind -lcurses   $(OPTIONS)
 
 # test du jeu
 mastermind_test : ${OBJ3}	
