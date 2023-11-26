@@ -7,7 +7,7 @@ typedef enum
     vert,
     jaune,
     orange,
-    rose,
+    magenta,
     noir
 } Couleurs;
 
@@ -22,7 +22,7 @@ const static struct
     {vert, "vert"},
     {jaune, "jaune"},
     {orange, "orange"},
-    {rose, "rose"},
+    {magenta, "magenta"},
     {noir, "noir"},
 };
 
