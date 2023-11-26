@@ -10,20 +10,22 @@
 
 // Format du strReseau:
 // yystr
-// yy est la longeur du string
+// yy est la longeur de la string
 // str est le message
 
 
 void sendMessage ( int socket , char str[] )
-/* Cette fonction envoi un message dans le socket. Le message a envoyer compte avec un
-   code et un msg text. Le message envoyé sera dans le format au début du fichier:
-    - 2 pour la taille du message a recevoir
-    - le message a recevoir de taille variable
-   Ce format permet de lire la taille exacte de octets.
+/* Cette fonction envoie un message dans la socket en regardant sa taille avant de l'envoyer. 
+Le message a envoyer possède un entier indiquant sa taille et un message texte. Le message envoyé 
+sera dans le format:
+    - 2 bytes du début servant à indiquer la taille du message à recevoir
+    - le message à recevoir de taille variable
+   Ce format permettra de pouvoir lire la taille exacte du nombre d'octets qui cherche à être envoyé pour permettre par la suite la lecture du messages 
+   sans perte d'information.
 
     Input: 
         int socket :
-                socket à lire. La connexion est deja etablie. 
+                socket à lire. Il doit y avoir la connexion deja d'établie. 
         char str[] :
                 message a envoyer. 
     Output:
@@ -42,17 +44,17 @@ void sendMessage ( int socket , char str[] )
 }
 
 void lireMessage ( int socket , char * str)
-/* Cette fonction attendre jusqu'a un message arrive dans le socket et le lit.
+/* Cette fonction attend jusqu'à ce qu'un message arrive dans la socket et le lit.
    Ce message suit le format au début du fichier:
-    - 2 pour la taille du message a recevoir
-    - le message a recevoir de taille variable
-   Ce format permet de lire la taille exacte de octets.
+    - 2 bytes pour la taille du message a recevoir
+    - + le message à recevoir qui est de taille variable
+   Ce format permet de lire au préalable la taille exacte du message que l'on souhaite lire.
 
     Input: 
         int socket :
-                socket à lire. Il doit avoir la connexion deja etablie. 
+                socket à lire. Il doit y avoir la connexion deja d'établie. 
         char * str :
-                Pointeur ou on va ecrire le message. 
+                Pointeur vers l'adresse où on va ecrire le message. 
     Output:
         void
 */
