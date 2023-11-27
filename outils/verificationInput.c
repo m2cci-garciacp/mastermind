@@ -7,16 +7,16 @@
 
 int strEnFormat(char *str, int nvDiff)
 /*
-    Verifie qu'un string est forme par les couleurs du niveau de difficulte.
-    Qu'il y a le nombre de coleurs necessaire (=4).
+    Verifie qu'un string est formée par les couleurs du niveau de difficulte.
+    Qu'il y a le nombre de couleurs necessaire (=4).
 
     Input: 
         char str[] :
                 string d'entrée.
         int nvDiff :
-                Nivel de difficulté.
+                Niveau de difficulté.
     Output:
-        int : 1 si le str est du bon format, sino 0.
+        int : 1 si le str est du bon format, sinon 0.
 */
 {
 	char * coleurs[2000] ;
@@ -50,13 +50,13 @@ int strEnFormat(char *str, int nvDiff)
 
 int digitsOnly(char *s)
 /*
-    Verifie que le str est forme par chiffres. Selon le code ascii.
+    Verifie que le str est formé par des chiffres. Selon le code ascii.
 
     Input: 
         char str[] :
                 string d'entrée.
     Output:
-        int : 1 si le str n'est forme que par chiffres, sino 0.
+        int : 1 si le str n'est forme que par des chiffres, sinon 0.
 */
 {	
 	int i=0;
@@ -112,9 +112,9 @@ int coleurEnJeu (char * word, int nvDiff)
 
     Input: 
         char /*word :
-                couleur a tester.
+                couleur à tester.
         int nvDiff :
-                niveau de difficulte
+                niveau de difficulté
     Output:
         int : 1 si word appartient aux couleurs de jeu, sinon 0.
 */
