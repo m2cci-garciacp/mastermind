@@ -121,7 +121,8 @@ int coleurEnJeu (char * word, int nvDiff)
 {
     int i;
     for (i=0; i<nvDiff; i++) {
-		if (strcmp(word, conversion[i].str)==0) break;
+		if (strcmp(word, conversion1[i].str)==0) break;
+		else if (strcmp(word, conversion2[i].str)==0) break;
     }
 	if (i==nvDiff) {
         return 0 ;

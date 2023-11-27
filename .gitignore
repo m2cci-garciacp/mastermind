@@ -16,4 +16,5 @@ test*
 # idk
 a.out
 __MACOSX/*
+.vscode/*
 .~lock.automates.odg#

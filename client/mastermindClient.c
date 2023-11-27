@@ -70,9 +70,9 @@ void introduirTentative(char niveauDiff)
     // Obtenir les couleurs
     for (int j = 0; j < niveauDiff-1; ++j)
     {
-        sprintf(introTentative, "%s%s-", introTentative, conversion[j].str);
+        sprintf(introTentative, "%s%s-", introTentative, conversion1[j].str);
     }
-    sprintf(introTentative, "%s%s-", introTentative, conversion[niveauDiff-1].str);
+    sprintf(introTentative, "%s%s-", introTentative, conversion1[niveauDiff-1].str);
     // Suite du message
     strcat( introTentative, "\nEntrez la séquence de couleur proposée (séparé par des tirets):\n");
     // Imprimer le message
@@ -108,6 +108,7 @@ void ecritureTentative(int sequence[], int*L, int nvDiff)
     {
         introduirTentative(nvDiff) ;
         scanf("%s", seq_tentative_str);
+        strlwr(seq_tentative_str) ;
     }
 	// Transformer le text des couleurs en sequence des entiers.
     texteASeqInt(seq_tentative_str, sequence, L) ;
@@ -181,11 +182,15 @@ Couleurs str2enum(const char *str)
 {
     int j;
 
-    for (j = 0; j < sizeof(conversion) / sizeof(conversion[0]); ++j)
+    for (j = 0; j < sizeof(conversion1) / sizeof(conversion1[0]); ++j)
     {
-        if (!strcmp(str, conversion[j].str))
+        if (!strcmp(str, conversion1[j].str)) 
         {
-            return conversion[j].val;
+            return conversion1[j].val;
+        } 
+        else if (!strcmp(str, conversion2[j].str)) 
+        {
+            return conversion2[j].val;
         }
     }
     return 0;

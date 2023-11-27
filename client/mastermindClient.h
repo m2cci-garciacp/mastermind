@@ -16,7 +16,7 @@ const static struct
 {
     Couleurs val;
     const char *str;
-} conversion[] = {
+} conversion1[] = {
     {bleu, "bleu"},
     {rouge, "rouge"},
     {vert, "vert"},
@@ -24,6 +24,19 @@ const static struct
     {orange, "orange"},
     {magenta, "magenta"},
     {noir, "noir"},
+};
+const static struct
+{
+    Couleurs val;
+    const char *str;
+} conversion2[] = {
+    {bleu, "b"},
+    {rouge, "r"},
+    {vert, "v"},
+    {jaune, "j"},
+    {orange, "o"},
+    {magenta, "m"},
+    {noir, "n"},
 };
 
 void imprimerRegles () ;

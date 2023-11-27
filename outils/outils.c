@@ -67,3 +67,13 @@ void seqIntToStr ( int* Seq, int L, char *str )
         sprintf(str, "%s%d ", str, Seq[i]);
     }
 }
+
+
+void strlwr(char * str) {
+    int i = 0 ;
+    while(str[i] != 0 )
+    {
+        str[i] = tolower(str[i]) ;
+        i++ ;
+    }
+}
