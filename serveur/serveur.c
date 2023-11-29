@@ -25,7 +25,6 @@
 #include "./../outils/outils.h"     	            /* Fontions aux. de connexion mais specifiques au jeu */     	
 
 #define SERVICE_DEFAUT "1111"
-#define READ_SIZE 1000
 #define N_COLORS 4
 
 
@@ -42,12 +41,12 @@ int main(int argc,char *argv[])
 
 	char *service= SERVICE_DEFAUT; /* numero de service par defaut */
 
-
+	printf("SERVEUR :\n\n");
 	/* Permet de passer un nombre de parametre variable a l'executable */
 	switch (argc)
  	{
    	case 1:
-		  printf("defaut service = %s\n", service);
+		  //printf("defaut service = %s\n", service);
 		  		  break;
  	case 2:
 		  service=argv[1];
@@ -130,7 +129,7 @@ void partieMasterMind ( int socketClient )
 	int combinationJoueur[N_COLORS+1];      // Combinaison du joueur.
 	int reponse[N_COLORS+1];                // Reponse au joueur: sequence de taille L.
 	int L=0 ;                               // Taille de la reponse au joueur: taille L de reponse.
-	char message[200];                      // String utilise pour toute communication.
+	char message[STR_SIZE];                 // String utilise pour toute communication.
 	int nvDiff ;                            // Niveau de difficulte.
 	int nbTours = 0 ;                       // Nombre de tours.
 

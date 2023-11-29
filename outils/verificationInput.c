@@ -5,6 +5,8 @@
 #include "verificationInput.h"                        /* Fonctions pour verifier les inputs du joueur */
 #include "./../client/mastermindClient.h"           /* Fonctions du Jeu Client */
 
+#define STR_SIZE 1000
+
 int strEnFormat(char *str, int nvDiff)
 /*
     Verifie qu'un string est formée par les couleurs du niveau de difficulte.
@@ -19,8 +21,8 @@ int strEnFormat(char *str, int nvDiff)
         int : 1 si le str est du bon format, sinon 0.
 */
 {
-	char * coleurs[2000] ;
-	char word[2000] ;
+	char * coleurs[STR_SIZE] ;
+	char word[STR_SIZE] ;
     char cpt = 0;
     char separateur = '-' ;
 	int i=0, j=0 ;
@@ -34,12 +36,11 @@ int strEnFormat(char *str, int nvDiff)
             cpt++;
 			if ( 1-coleurEnJeu(word, nvDiff) ) {
                 return 0;
-            }			
+            }
 			strcpy( word , "" ) ;
 		}
 		j++;
 	}
-
     if ( (coleurEnJeu(word, nvDiff) && cpt==3) || (strcmp(word,"")==0 && cpt==4 )) 
     {        
         return 1;
@@ -120,6 +121,7 @@ int coleurEnJeu (char * word, int nvDiff)
 */
 {
     int i;
+
     for (i=0; i<nvDiff; i++) {
 		if (strcmp(word, conversion1[i].str)==0) break;
 		else if (strcmp(word, conversion2[i].str)==0) break;

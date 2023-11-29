@@ -1,8 +1,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "outils.h"            /* Outils de conversion */
+
 
 
 void strToSeqInt ( char str[] , int* Seq, int* L) 

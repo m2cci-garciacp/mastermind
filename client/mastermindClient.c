@@ -38,7 +38,7 @@ int demanderDifficulte ()
                 difficulté du jeu: entre 5-7 couleurs.
 */ 
 {
-	char input[2000] = "a";
+	char input[STR_SIZE] = "a";
     const char msg[] = "\n\nAvec combien couleurs voulez-vous jouer? [5-7]: ";
 
     // Verifier si il y a que de chiffres dans le string
@@ -65,14 +65,14 @@ void introduirTentative(char niveauDiff)
 */
 {
     // Afficher les couleurs possibles
-    char introTentative[1000] = "\nPour rappel les couleurs possibles sont:  " ;
+    char introTentative[STR_SIZE] = "\nPour rappel les couleurs possibles sont:  " ;
     
     // Obtenir les couleurs
     for (int j = 0; j < niveauDiff-1; ++j)
     {
         sprintf(introTentative, "%s%s-", introTentative, conversion1[j].str);
     }
-    sprintf(introTentative, "%s%s-", introTentative, conversion1[niveauDiff-1].str);
+    sprintf(introTentative, "%s%s", introTentative, conversion1[niveauDiff-1].str);
     // Suite du message
     strcat( introTentative, "\nEntrez la séquence de couleur proposée (séparé par des tirets):\n");
     // Imprimer le message
@@ -98,7 +98,7 @@ void ecritureTentative(int sequence[], int*L, int nvDiff)
         void
 */
 {
-    char seq_tentative_str[1000] = "a";
+    char seq_tentative_str[STR_SIZE] = "a";
 
     // Verifier:
     //  - 4 couleurs
@@ -131,13 +131,26 @@ void faireRetour(int nbBienPlaces, int nbMalPlaces)
         void
 */
 {
-    char mess_tentative[1000] = "\nVous avez trouvé ";
+    char mess_tentative[STR_SIZE] = "\nVous avez trouvé ";
 
-    sprintf(mess_tentative, "%s%d", mess_tentative, nbBienPlaces);
-    strcat(mess_tentative, " bonnes couleurs bien placées et ");
-    sprintf(mess_tentative, "%s%d", mess_tentative, nbMalPlaces);
-    strcat(mess_tentative, " couleurs présentes mais mal placées\n");
-
+    if (nbBienPlaces!=0 && nbMalPlaces!=0) {
+        sprintf(mess_tentative, "%s%d", mess_tentative, nbBienPlaces);
+        if (nbBienPlaces==1) strcat(mess_tentative, " couleur bien placée et ");
+        else strcat(mess_tentative, " couleurs bien placées et ");
+        sprintf(mess_tentative, "%s%d", mess_tentative, nbMalPlaces);
+        if (nbMalPlaces==1) strcat(mess_tentative, " couleur présente mais mal placée\n");
+        else strcat(mess_tentative, " couleurs présentes mais mal placées\n");
+    } else if (nbBienPlaces!=0) {
+        sprintf(mess_tentative, "%s%d", mess_tentative, nbBienPlaces);
+        if (nbBienPlaces==1) strcat(mess_tentative, " couleur bien placée\n");
+        else strcat(mess_tentative, " couleurs bien placées\n");
+    } else if (nbMalPlaces!=0) {
+        sprintf(mess_tentative, "%s%d", mess_tentative, nbMalPlaces);
+        if (nbMalPlaces==1) strcat(mess_tentative, " couleur présente mais mal placée\n");
+        else strcat(mess_tentative, " couleurs présentes mais mal placées\n");
+    } else {
+        strcpy(mess_tentative, "Vous n'avez trouvé aucune couleur\n");
+    }
     printf("%s", mess_tentative);
 }
 
@@ -156,7 +169,7 @@ void donnerPoints(int nbTours, int score)
         void
 */
 {
-    char messFin[1000] = "\nBravo, vous avez trouvé la séquence secrète en ";
+    char messFin[STR_SIZE] = "\nBravo, vous avez trouvé la séquence secrète en ";
 
     sprintf(messFin, "%s%d tours !\n", messFin, nbTours);
     sprintf(messFin, "%sVotre score est de %d points !\n\n", messFin, score);
@@ -214,7 +227,7 @@ void texteASeqInt(char txt[], int* seqTentative, int* L)
 
 */
 {
-    char couleur[1000];
+    char couleur[STR_SIZE];
     Couleurs nomCouleur;
     int i, j, c;
     j = 0;
@@ -225,7 +238,7 @@ void texteASeqInt(char txt[], int* seqTentative, int* L)
     {
         // Vider le tableau pour prendre en compte la prochaine couleur
         memset(couleur, 0, sizeof(couleur));
-        while ((txt[j] != '-') && (txt[j] != 0))
+        while ((txt[j] != ' ') && (txt[j] != '-') && (txt[j] != 0))
         {
             couleur[c] = txt[j];
             j = j + 1;

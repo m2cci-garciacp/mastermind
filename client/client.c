@@ -108,7 +108,7 @@ void partieEnCours ( int socket )
 		void
 */
 {
-	char message[2000] ;         // String tampon pour les messages
+	char message[STR_SIZE] ;     // String tampon pour les messages
 	int nvDiff;                  // Niveau de difficulté
 	int sequence[4];             // Tableau contenant la sequence de la combination du joueur: taille L
 	int L=0;                     // Taille de la sequence de la combination du joeueur.

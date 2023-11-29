@@ -34,6 +34,7 @@ void initialisation(int* combinationSecrete, int niveauDiff)
         combinationSecrete[i] = random() % niveauDiff;
         printf("%d ", combinationSecrete[i]);
     }
+
     printf("\n");
 }
 

@@ -30,7 +30,7 @@ OPTIONS	+= -ltermcap  -lsocket -lnsl
 CFLAGS	+= -I..
 endif
 
-EXEC = ${OBJ1} client ${OBJ2} serveur# ${OBJ3} mastermind_test
+EXEC = ${OBJ1} clientMasterMind ${OBJ2} serveurMasterMind
 all: ${EXEC} 	
 
 # Programme principal
